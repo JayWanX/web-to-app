@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.webtoapp.core.cloud.ModuleComment
 import com.webtoapp.ui.viewmodel.CommunityViewModel
 import com.webtoapp.ui.components.ThemedBackgroundBox
+import com.webtoapp.core.i18n.Strings
 
 /**
  * 模块详情 — Jobs-style frosted glass + spring physics
@@ -71,7 +72,7 @@ fun ModuleDetailScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Post", fontSize = 17.sp, fontWeight = FontWeight.Bold) },
+                title = { Text(Strings.communityPost, fontSize = 17.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null, Modifier.size(22.dp))
@@ -90,7 +91,7 @@ fun ModuleDetailScreen(
                         value = commentText,
                         onValueChange = { commentText = it },
                         placeholder = {
-                            Text("Post your reply", fontSize = 14.sp,
+                             Text(Strings.communityPostYourReply, fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f))
                         },
                         modifier = Modifier.weight(weight = 1f, fill = true).heightIn(max = 96.dp),
@@ -192,7 +193,7 @@ fun ModuleDetailScreen(
                                 Text(
                                     buildAnnotatedString {
                                         mod.versionName?.let { append("v$it  ·  ") }
-                                        append("${mod.downloads} downloads  ·  ${mod.ratingCount} ratings")
+                                        append("${String.format(Strings.communityDownloads, mod.downloads)}  ·  ${String.format(Strings.communityRatings, mod.ratingCount)}")
                                     },
                                     fontSize = 13.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
@@ -255,9 +256,9 @@ fun ModuleDetailScreen(
                         item {
                             Box(Modifier.fillMaxWidth().padding(vertical = 48.dp), contentAlignment = Alignment.Center) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text("No replies yet", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                                    Text(Strings.communityNoRepliesYet, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                                     Spacer(Modifier.height(2.dp))
-                                    Text("Be the first to reply.", fontSize = 14.sp,
+                                    Text(Strings.communityBeFirstReply, fontSize = 14.sp,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f))
                                 }
                             }
@@ -399,7 +400,7 @@ private fun CommentRow(comment: ModuleComment, onUserClick: () -> Unit) {
                     }
                 }
                 if (comment.replies.size > 3) {
-                    Text("Show more replies", fontSize = 13.sp, color = MaterialTheme.colorScheme.primary,
+                    Text(Strings.communityShowMoreReplies, fontSize = 13.sp, color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(top = 2.dp))
                 }
             }
@@ -463,15 +464,15 @@ private fun DetailShimmer(modifier: Modifier = Modifier) {
 private fun ReportSheet(onDismiss: () -> Unit, onReport: (String) -> Unit) {
     var selected by remember { mutableStateOf("") }
     val reasons = listOf(
-        "spam" to "Spam", "inappropriate" to "Inappropriate content",
-        "malicious" to "Malicious code", "copyright" to "Copyright violation", "other" to "Other"
+        "spam" to Strings.communityReportSpam, "inappropriate" to Strings.communityReportInappropriate,
+        "malicious" to Strings.communityReportMalicious, "copyright" to Strings.communityReportCopyright, "other" to Strings.communityReportOther
     )
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(Modifier.padding(horizontal = 20.dp)) {
-            Text("Report", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(Strings.communityReportTitle, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Spacer(Modifier.height(4.dp))
-            Text("Why are you reporting this?", fontSize = 14.sp,
+            Text(Strings.communityReportWhy, fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f))
             Spacer(Modifier.height(16.dp))
             reasons.forEach { (key, label) ->
@@ -490,7 +491,7 @@ private fun ReportSheet(onDismiss: () -> Unit, onReport: (String) -> Unit) {
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 shape = RoundedCornerShape(24.dp),
                 enabled = selected.isNotBlank()
-            ) { Text("Submit", fontWeight = FontWeight.Bold) }
+            ) { Text(Strings.communityReportSubmit, fontWeight = FontWeight.Bold) }
             Spacer(Modifier.height(28.dp))
         }
     }

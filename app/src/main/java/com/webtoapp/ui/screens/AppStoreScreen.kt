@@ -157,137 +157,125 @@ fun AppStoreScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {}
             } else {
-                Column {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                Strings.tabStore,
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        actions = {
-                            IconButton(onClick = { isSearchActive = true }) {
-                                Icon(Icons.Outlined.Search, contentDescription = null)
-                            }
-                            Box {
-                                IconButton(onClick = { showMenu = true }) {
-                                    Icon(Icons.Outlined.MoreVert, contentDescription = null)
-                                    // Badge for active downloads
-                                    if (activeCount > 0) {
-                                        Badge(
-                                            modifier = Modifier
-                                                .align(Alignment.TopEnd)
-                                                .offset(x = (-4).dp, y = 4.dp),
-                                            containerColor = MaterialTheme.colorScheme.error
-                                        ) {
-                                            Text("$activeCount")
-                                        }
-                                    }
-                                }
-                                DropdownMenu(
-                                    expanded = showMenu,
-                                    onDismissRequest = { showMenu = false }
-                                ) {
-                                    if (pagerState.currentPage == 0) {
-                                        // ── Apps Tab Menu ──
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storeDownloadManager) },
-                                            onClick = { showMenu = false; showDownloadManager = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Download, null) },
-                                            trailingIcon = if (activeCount > 0 || downloadedCount > 0) {{
-                                                Badge(containerColor = if (activeCount > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary) {
-                                                    Text("${activeCount + downloadedCount}")
-                                                }
-                                            }} else null
-                                        )
-                                        HorizontalDivider()
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storeMyApps) },
-                                            onClick = { showMenu = false; showMyApps = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Apps, null) }
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storePublishApp) },
-                                            onClick = { showMenu = false; showPublishApp = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Publish, null) }
-                                        )
-                                    } else {
-                                        // ── Modules Tab Menu ──
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storeDownloadManager) },
-                                            onClick = { showMenu = false; showDownloadManager = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Download, null) },
-                                            trailingIcon = if (activeCount > 0 || downloadedCount > 0) {{
-                                                Badge(containerColor = if (activeCount > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary) {
-                                                    Text("${activeCount + downloadedCount}")
-                                                }
-                                            }} else null
-                                        )
-                                        HorizontalDivider()
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storeMyModules) },
-                                            onClick = { showMenu = false; showMyModules = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Extension, null) }
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text(Strings.storePublishModule) },
-                                            onClick = { showMenu = false; showPublishModule = true },
-                                            leadingIcon = { Icon(Icons.Outlined.Publish, null) }
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Transparent
-                        )
-                    )
-
-                    // ── Premium pill-style Tab 栏 ──
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 6.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(3.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                TopAppBar(
+                    title = {
+                        // 内嵌 pill-style Tab 切换器 — 不占额外空间
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.45f)
                         ) {
-                            tabTitles.forEachIndexed { index, title ->
-                                val isSelected = pagerState.currentPage == index
-                                Surface(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clickable {
-                                            scope.launch { pagerState.animateScrollToPage(index) }
-                                        },
-                                    shape = RoundedCornerShape(11.dp),
-                                    color = if (isSelected)
-                                        MaterialTheme.colorScheme.primary
-                                    else Color.Transparent
-                                ) {
-                                    Box(
-                                        modifier = Modifier.padding(vertical = 8.dp),
-                                        contentAlignment = Alignment.Center
+                            Row(
+                                modifier = Modifier.padding(2.dp),
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                tabTitles.forEachIndexed { index, title ->
+                                    val isSelected = pagerState.currentPage == index
+                                    Surface(
+                                        modifier = Modifier.clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null
+                                        ) { scope.launch { pagerState.animateScrollToPage(index) } },
+                                        shape = RoundedCornerShape(10.dp),
+                                        color = if (isSelected)
+                                            MaterialTheme.colorScheme.primary
+                                        else Color.Transparent
                                     ) {
-                                        Text(
-                                            title,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            fontSize = 14.sp,
-                                            color = if (isSelected)
-                                                MaterialTheme.colorScheme.onPrimary
-                                            else MaterialTheme.colorScheme.onSurfaceVariant,
-                                            letterSpacing = if (isSelected) 0.3.sp else 0.sp
-                                        )
+                                        Box(
+                                            modifier = Modifier.padding(horizontal = 18.dp, vertical = 6.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                title,
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                fontSize = 13.sp,
+                                                color = if (isSelected)
+                                                    MaterialTheme.colorScheme.onPrimary
+                                                else MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                }
+                    },
+                    actions = {
+                        IconButton(onClick = { isSearchActive = true }) {
+                            Icon(Icons.Outlined.Search, contentDescription = null, Modifier.size(21.dp))
+                        }
+                        Box {
+                            IconButton(onClick = { showMenu = true }) {
+                                Icon(Icons.Outlined.MoreVert, contentDescription = null, Modifier.size(21.dp))
+                                // Badge for active downloads
+                                if (activeCount > 0) {
+                                    Badge(
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .offset(x = (-4).dp, y = 4.dp),
+                                        containerColor = MaterialTheme.colorScheme.error
+                                    ) {
+                                        Text("$activeCount")
+                                    }
+                                }
+                            }
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = { showMenu = false }
+                            ) {
+                                if (pagerState.currentPage == 0) {
+                                    // ── Apps Tab Menu ──
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storeDownloadManager) },
+                                        onClick = { showMenu = false; showDownloadManager = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Download, null) },
+                                        trailingIcon = if (activeCount > 0 || downloadedCount > 0) {{
+                                            Badge(containerColor = if (activeCount > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary) {
+                                                Text("${activeCount + downloadedCount}")
+                                            }
+                                        }} else null
+                                    )
+                                    HorizontalDivider()
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storeMyApps) },
+                                        onClick = { showMenu = false; showMyApps = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Apps, null) }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storePublishApp) },
+                                        onClick = { showMenu = false; showPublishApp = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Publish, null) }
+                                    )
+                                } else {
+                                    // ── Modules Tab Menu ──
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storeDownloadManager) },
+                                        onClick = { showMenu = false; showDownloadManager = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Download, null) },
+                                        trailingIcon = if (activeCount > 0 || downloadedCount > 0) {{
+                                            Badge(containerColor = if (activeCount > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary) {
+                                                Text("${activeCount + downloadedCount}")
+                                            }
+                                        }} else null
+                                    )
+                                    HorizontalDivider()
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storeMyModules) },
+                                        onClick = { showMenu = false; showMyModules = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Extension, null) }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(Strings.storePublishModule) },
+                                        onClick = { showMenu = false; showPublishModule = true },
+                                        leadingIcon = { Icon(Icons.Outlined.Publish, null) }
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                    )
+                )
             }
         }
     ) { padding ->

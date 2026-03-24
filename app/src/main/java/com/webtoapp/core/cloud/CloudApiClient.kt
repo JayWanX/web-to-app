@@ -1606,8 +1606,9 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
         val responseBody = response.body?.string() ?: ""
         if (response.isSuccessful) {
             val json = JsonParser.parseString(responseBody).asJsonObject
-            val dataArr = json.getAsJsonArray("data") ?: return@authRequest AuthResult.Success(emptyList())
-            AuthResult.Success(dataArr.map { parseCommunityPost(it.asJsonObject) })
+            val data = json.getAsJsonObject("data")
+            val postsArr = data?.getAsJsonArray("posts") ?: return@authRequest AuthResult.Success(emptyList())
+            AuthResult.Success(postsArr.map { parseCommunityPost(it.asJsonObject) })
         } else AuthResult.Error(parseError(responseBody, response.code))
     }
 
@@ -1622,8 +1623,9 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
         val responseBody = response.body?.string() ?: ""
         if (response.isSuccessful) {
             val json = JsonParser.parseString(responseBody).asJsonObject
-            val dataArr = json.getAsJsonArray("data") ?: return@authRequest AuthResult.Success(emptyList())
-            AuthResult.Success(dataArr.map { parseCommunityPost(it.asJsonObject) })
+            val data = json.getAsJsonObject("data")
+            val postsArr = data?.getAsJsonArray("posts") ?: return@authRequest AuthResult.Success(emptyList())
+            AuthResult.Success(postsArr.map { parseCommunityPost(it.asJsonObject) })
         } else AuthResult.Error(parseError(responseBody, response.code))
     }
 
@@ -1638,8 +1640,9 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
             val responseBody = response.body?.string() ?: ""
             if (response.isSuccessful) {
                 val json = JsonParser.parseString(responseBody).asJsonObject
-                val dataArr = json.getAsJsonArray("data") ?: return AuthResult.Success(emptyList())
-                AuthResult.Success(dataArr.map { parseSimpleUserProfile(it.asJsonObject) })
+                val data = json.getAsJsonObject("data")
+                val usersArr = data?.getAsJsonArray("users") ?: return AuthResult.Success(emptyList())
+                AuthResult.Success(usersArr.map { parseSimpleUserProfile(it.asJsonObject) })
             } else AuthResult.Error(parseError(responseBody, response.code))
         } catch (e: Exception) {
             AuthResult.Error("Network error: ${e.message}")
@@ -1657,8 +1660,9 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
             val responseBody = response.body?.string() ?: ""
             if (response.isSuccessful) {
                 val json = JsonParser.parseString(responseBody).asJsonObject
-                val dataArr = json.getAsJsonArray("data") ?: return AuthResult.Success(emptyList())
-                AuthResult.Success(dataArr.map { parseSimpleUserProfile(it.asJsonObject) })
+                val data = json.getAsJsonObject("data")
+                val usersArr = data?.getAsJsonArray("users") ?: return AuthResult.Success(emptyList())
+                AuthResult.Success(usersArr.map { parseSimpleUserProfile(it.asJsonObject) })
             } else AuthResult.Error(parseError(responseBody, response.code))
         } catch (e: Exception) {
             AuthResult.Error("Network error: ${e.message}")
@@ -1668,16 +1672,18 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     /** 搜索用户 */
     suspend fun searchUsers(query: String, page: Int = 1, size: Int = 20): AuthResult<List<CommunityUserProfile>> {
         return try {
+            val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
             val request = Request.Builder()
-                .url("$BASE_URL/api/v1/community/users/search?q=$query&page=$page&size=$size")
+                .url("$BASE_URL/api/v1/community/users/search?q=$encodedQuery&page=$page&size=$size")
                 .get()
                 .build()
             val response = client.newCall(request).execute()
             val responseBody = response.body?.string() ?: ""
             if (response.isSuccessful) {
                 val json = JsonParser.parseString(responseBody).asJsonObject
-                val dataArr = json.getAsJsonArray("data") ?: return AuthResult.Success(emptyList())
-                AuthResult.Success(dataArr.map { parseSimpleUserProfile(it.asJsonObject) })
+                val data = json.getAsJsonObject("data")
+                val usersArr = data?.getAsJsonArray("users") ?: return AuthResult.Success(emptyList())
+                AuthResult.Success(usersArr.map { parseSimpleUserProfile(it.asJsonObject) })
             } else AuthResult.Error(parseError(responseBody, response.code))
         } catch (e: Exception) {
             AuthResult.Error("Network error: ${e.message}")
@@ -1723,35 +1729,38 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     }
 
     /** 获取用户主页 */
-    suspend fun getUserProfile(userId: Int): AuthResult<CommunityUserProfile> {
-        return try {
-            val request = Request.Builder()
-                .url("$BASE_URL/api/v1/community/users/$userId")
-                .get()
-                .build()
-            val response = client.newCall(request).execute()
-            val responseBody = response.body?.string() ?: ""
-            if (response.isSuccessful) {
-                val json = JsonParser.parseString(responseBody).asJsonObject
-                val d = json.getAsJsonObject("data")
-                AuthResult.Success(CommunityUserProfile(
-                    id = d?.get("id")?.asInt ?: 0,
-                    username = d?.get("username")?.asString ?: "",
-                    displayName = d?.get("display_name")?.asString,
-                    avatarUrl = d?.get("avatar_url")?.asString,
-                    bio = d?.get("bio")?.asString,
-                    moduleCount = d?.get("module_count")?.asInt ?: 0,
-                    followerCount = d?.get("follower_count")?.asInt ?: 0,
-                    followingCount = d?.get("following_count")?.asInt ?: 0,
-                    isFollowing = d?.get("is_following")?.asBoolean ?: false,
-                    isDeveloper = d?.get("is_developer")?.asBoolean ?: false,
-                    teamBadges = d?.let { parseTeamBadges(it) } ?: emptyList()
-                ))
-            } else AuthResult.Error(parseError(responseBody, response.code))
-        } catch (e: Exception) {
-            AuthResult.Error("Network error: ${e.message}")
+    suspend fun getUserProfile(userId: Int): AuthResult<CommunityUserProfile> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder()
+                    .url("$BASE_URL/api/v1/community/users/$userId")
+                    .get()
+                // 可选认证：有 token 时服务端可计算 is_following 字段
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val d = json.getAsJsonObject("data")
+                    AuthResult.Success(CommunityUserProfile(
+                        id = d?.get("id")?.asInt ?: 0,
+                        username = d?.get("username")?.asString ?: "",
+                        displayName = d?.get("display_name")?.let { if (it.isJsonNull) null else it.asString },
+                        avatarUrl = d?.get("avatar_url")?.let { if (it.isJsonNull) null else it.asString },
+                        bio = d?.get("bio")?.let { if (it.isJsonNull) null else it.asString },
+                        moduleCount = d?.get("published_modules_count")?.asInt ?: d?.get("module_count")?.asInt ?: 0,
+                        followerCount = d?.get("follower_count")?.asInt ?: 0,
+                        followingCount = d?.get("following_count")?.asInt ?: 0,
+                        isFollowing = d?.get("is_following")?.asBoolean ?: false,
+                        isDeveloper = d?.get("is_developer")?.asBoolean ?: false,
+                        teamBadges = d?.let { parseTeamBadges(it) } ?: emptyList(),
+                        createdAt = d?.get("created_at")?.let { if (it.isJsonNull) null else it.asString }
+                    ))
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
         }
-    }
 
     // ═══════════════════════════════════════════
     // 19. NOTIFICATIONS
@@ -2488,8 +2497,9 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     private fun parseError(body: String, statusCode: Int = 0): String = try {
         val json = JsonParser.parseString(body).asJsonObject
         val msg = json.get("detail")?.asString ?: json.get("message")?.asString ?: "操作失败"
-        if (statusCode > 0) "HTTP $statusCode: $msg" else msg
-    } catch (_: Exception) { if (statusCode > 0) "HTTP $statusCode: 操作失败" else "操作失败" }
+        // Keep HTTP prefix for 401 so authRequest refresh-token logic can detect it
+        if (statusCode == 401) "HTTP 401: $msg" else msg
+    } catch (_: Exception) { if (statusCode > 0) "HTTP $statusCode" else "操作失败" }
 
     // ═══════════════════════════════════════════
     // 10. APP STORE
@@ -3469,32 +3479,45 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     // 17c. COMMUNITY POSTS
     // ═══════════════════════════════════════════
 
-    /** 获取社区帖子 Feed */
-    suspend fun listCommunityPosts(page: Int = 1, size: Int = 20, tag: String? = null, search: String? = null): AuthResult<CommunityFeedResponse> = authRequest { token ->
-        val urlBuilder = StringBuilder("$BASE_URL/api/v1/community/posts?page=$page&size=$size")
-        tag?.let { urlBuilder.append("&tag=$it") }
-        search?.let { urlBuilder.append("&search=$it") }
-        val request = Request.Builder().url(urlBuilder.toString()).header("Authorization", "Bearer $token").get().build()
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            val data = json.getAsJsonObject("data")
-            val posts = data?.getAsJsonArray("posts")?.map { parseCommunityPost(it.asJsonObject) } ?: emptyList()
-            AuthResult.Success(CommunityFeedResponse(posts = posts, total = data?.get("total")?.asInt ?: 0))
-        } else AuthResult.Error(parseError(responseBody, response.code))
-    }
+    /** 获取社区帖子 Feed（支持匿名访问，与服务端 get_optional_user 对齐） */
+    suspend fun listCommunityPosts(page: Int = 1, size: Int = 20, tag: String? = null, search: String? = null): AuthResult<CommunityFeedResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val urlBuilder = StringBuilder("$BASE_URL/api/v1/community/posts?page=$page&size=$size")
+                tag?.let { urlBuilder.append("&tag=$it") }
+                search?.let { urlBuilder.append("&search=$it") }
+                val requestBuilder = Request.Builder().url(urlBuilder.toString()).get()
+                // 可选认证：有 token 就带上（用于 is_liked 等个性化字段），没有也能正常请求
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val data = json.getAsJsonObject("data")
+                    val posts = data?.getAsJsonArray("posts")?.map { parseCommunityPost(it.asJsonObject) } ?: emptyList()
+                    AuthResult.Success(CommunityFeedResponse(posts = posts, total = data?.get("total")?.asInt ?: 0))
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
+        }
 
-    /** 获取单个帖子详情 */
-    suspend fun getCommunityPost(postId: Int): AuthResult<CommunityPostItem> = authRequest { token ->
-        val request = Request.Builder().url("$BASE_URL/api/v1/community/posts/$postId").header("Authorization", "Bearer $token").get().build()
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            AuthResult.Success(parseCommunityPost(json.getAsJsonObject("data")))
-        } else AuthResult.Error(parseError(responseBody, response.code))
-    }
+    /** 获取单个帖子详情（支持匿名访问） */
+    suspend fun getCommunityPost(postId: Int): AuthResult<CommunityPostItem> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder().url("$BASE_URL/api/v1/community/posts/$postId").get()
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    AuthResult.Success(parseCommunityPost(json.getAsJsonObject("data")))
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
+        }
 
     /** 发布帖子 */
     suspend fun createCommunityPost(content: String, tags: List<String>, media: List<PostMediaInput> = emptyList(), appLinks: List<PostAppLinkInput> = emptyList()): AuthResult<CommunityPostItem> = authRequest { token ->
@@ -3561,17 +3584,23 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
         else AuthResult.Error(parseError(responseBody, response.code))
     }
 
-    /** 获取帖子评论列表 */
-    suspend fun listPostComments(postId: Int): AuthResult<List<PostCommentItem>> = authRequest { token ->
-        val request = Request.Builder().url("$BASE_URL/api/v1/community/posts/$postId/comments").header("Authorization", "Bearer $token").get().build()
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            val data = json.getAsJsonArray("data")
-            AuthResult.Success(data?.map { parsePostComment(it.asJsonObject) } ?: emptyList())
-        } else AuthResult.Error(parseError(responseBody, response.code))
-    }
+    /** 获取帖子评论列表（支持匿名访问） */
+    suspend fun listPostComments(postId: Int): AuthResult<List<PostCommentItem>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder().url("$BASE_URL/api/v1/community/posts/$postId/comments").get()
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val data = json.getAsJsonArray("data")
+                    AuthResult.Success(data?.map { parsePostComment(it.asJsonObject) } ?: emptyList())
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
+        }
 
     /** 添加帖子评论 */
     suspend fun addPostComment(postId: Int, content: String, parentId: Int? = null): AuthResult<PostCommentItem> = authRequest { token ->
@@ -3603,18 +3632,24 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
         else AuthResult.Error(parseError(responseBody, response.code))
     }
 
-    /** 获取用户的帖子列表 */
-    suspend fun getUserPosts(userId: Int, page: Int = 1, size: Int = 20): AuthResult<CommunityFeedResponse> = authRequest { token ->
-        val request = Request.Builder().url("$BASE_URL/api/v1/community/posts/user/$userId?page=$page&size=$size").header("Authorization", "Bearer $token").get().build()
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            val data = json.getAsJsonObject("data")
-            val posts = data?.getAsJsonArray("posts")?.map { parseCommunityPost(it.asJsonObject) } ?: emptyList()
-            AuthResult.Success(CommunityFeedResponse(posts = posts, total = data?.get("total")?.asInt ?: 0))
-        } else AuthResult.Error(parseError(responseBody, response.code))
-    }
+    /** 获取用户的帖子列表（支持匿名访问） */
+    suspend fun getUserPosts(userId: Int, page: Int = 1, size: Int = 20): AuthResult<CommunityFeedResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder().url("$BASE_URL/api/v1/community/posts/user/$userId?page=$page&size=$size").get()
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val data = json.getAsJsonObject("data")
+                    val posts = data?.getAsJsonArray("posts")?.map { parseCommunityPost(it.asJsonObject) } ?: emptyList()
+                    AuthResult.Success(CommunityFeedResponse(posts = posts, total = data?.get("total")?.asInt ?: 0))
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
+        }
 
     /** P2 #11: 获取用户发布的模块列表 (使用精确端点而非 search) */
     suspend fun getUserModules(userId: Int, page: Int = 1, size: Int = 20): AuthResult<Pair<List<StoreModuleInfo>, Int>> = withContext(Dispatchers.IO) {
@@ -3685,22 +3720,28 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     }
 
     /** 获取用户在线活动统计 */
-    suspend fun getUserActivity(userId: Int): AuthResult<UserActivityInfo> = authRequest { token ->
-        val request = Request.Builder().url("$BASE_URL/api/v1/community/users/$userId/activity").header("Authorization", "Bearer $token").get().build()
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            val d = json.getAsJsonObject("data")
-            AuthResult.Success(UserActivityInfo(
-                isOnline = d?.get("is_online")?.asBoolean ?: false,
-                lastSeenAt = d?.get("last_seen_at")?.let { if (it.isJsonNull) null else it.asString },
-                todaySeconds = d?.get("today_seconds")?.asInt ?: 0,
-                monthSeconds = d?.get("month_seconds")?.asInt ?: 0,
-                yearSeconds = d?.get("year_seconds")?.asInt ?: 0,
-            ))
-        } else AuthResult.Error(parseError(responseBody, response.code))
-    }
+    suspend fun getUserActivity(userId: Int): AuthResult<UserActivityInfo> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder().url("$BASE_URL/api/v1/community/users/$userId/activity").get()
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val d = json.getAsJsonObject("data")
+                    AuthResult.Success(UserActivityInfo(
+                        isOnline = d?.get("is_online")?.asBoolean ?: false,
+                        lastSeenAt = d?.get("last_seen_at")?.let { if (it.isJsonNull) null else it.asString },
+                        todaySeconds = d?.get("today_seconds")?.asInt ?: 0,
+                        monthSeconds = d?.get("month_seconds")?.asInt ?: 0,
+                        yearSeconds = d?.get("year_seconds")?.asInt ?: 0,
+                    ))
+                } else AuthResult.Error(parseError(responseBody, response.code))
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
+        }
 
     /** 发送心跳 (追踪在线时间) */
     suspend fun sendHeartbeat(): AuthResult<Unit> = authRequest { token ->
@@ -3793,10 +3834,10 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
         return CommunityUserProfile(
             id = obj.get("id")?.asInt ?: 0,
             username = obj.get("username")?.asString ?: "",
-            displayName = obj.get("display_name")?.asString,
-            avatarUrl = obj.get("avatar_url")?.asString,
-            bio = obj.get("bio")?.asString,
-            moduleCount = obj.get("module_count")?.asInt ?: 0,
+            displayName = obj.get("display_name")?.let { if (it.isJsonNull) null else it.asString },
+            avatarUrl = obj.get("avatar_url")?.let { if (it.isJsonNull) null else it.asString },
+            bio = obj.get("bio")?.let { if (it.isJsonNull) null else it.asString },
+            moduleCount = obj.get("published_modules_count")?.asInt ?: obj.get("module_count")?.asInt ?: 0,
             followerCount = obj.get("follower_count")?.asInt ?: 0,
             followingCount = obj.get("following_count")?.asInt ?: 0,
             isFollowing = obj.get("is_following")?.asBoolean ?: false,
@@ -3878,42 +3919,46 @@ class CloudApiClient(private val tokenManager: TokenManager, context: android.co
     }
 
     /** 获取用户的团队作品列表 (用于个人主页) */
-    suspend fun getUserTeamWorks(userId: Int, page: Int = 1, size: Int = 20): AuthResult<UserTeamWorksResponse> = authRequest { token ->
-        val request = Request.Builder()
-            .url("$BASE_URL/api/v1/users/$userId/team-works?page=$page&size=$size")
-            .header("Authorization", "Bearer $token")
-            .get().build()
-
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: ""
-        if (response.isSuccessful) {
-            val json = JsonParser.parseString(responseBody).asJsonObject
-            val data = json.getAsJsonObject("data")
-            val works = data?.getAsJsonArray("works")?.map { el ->
-                val w = el.asJsonObject
-                TeamWorkItem(
-                    id = w.get("id")?.asInt ?: 0,
-                    name = w.get("name")?.asString ?: "",
-                    moduleType = w.get("module_type")?.asString ?: "app",
-                    icon = w.get("icon")?.let { if (it.isJsonNull) null else it.asString },
-                    downloads = w.get("downloads")?.asInt ?: 0,
-                    rating = w.get("rating")?.asFloat ?: 0f,
-                    authorName = w.get("author_name")?.asString ?: "?",
-                    contributorRole = w.get("contributor_role")?.asString ?: "member",
-                    contributionPoints = w.get("contribution_points")?.asInt ?: 0,
-                    contributionDescription = w.get("contribution_description")?.let { if (it.isJsonNull) null else it.asString },
-                    teamId = w.get("team_id")?.let { if (it.isJsonNull) null else it.asInt },
-                    teamName = w.get("team_name")?.let { if (it.isJsonNull) null else it.asString },
-                )
-            } ?: emptyList()
-            AuthResult.Success(UserTeamWorksResponse(
-                works = works,
-                total = data?.get("total")?.asInt ?: 0,
-            ))
-        } else {
-            AuthResult.Error(parseError(responseBody, response.code))
+    suspend fun getUserTeamWorks(userId: Int, page: Int = 1, size: Int = 20): AuthResult<UserTeamWorksResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestBuilder = Request.Builder()
+                    .url("$BASE_URL/api/v1/users/$userId/team-works?page=$page&size=$size")
+                    .get()
+                tokenManager.getAccessToken()?.let { requestBuilder.header("Authorization", "Bearer $it") }
+                val response = client.newCall(requestBuilder.build()).execute()
+                val responseBody = response.body?.string() ?: ""
+                if (response.isSuccessful) {
+                    val json = JsonParser.parseString(responseBody).asJsonObject
+                    val data = json.getAsJsonObject("data")
+                    val works = data?.getAsJsonArray("works")?.map { el ->
+                        val w = el.asJsonObject
+                        TeamWorkItem(
+                            id = w.get("id")?.asInt ?: 0,
+                            name = w.get("name")?.asString ?: "",
+                            moduleType = w.get("module_type")?.asString ?: "app",
+                            icon = w.get("icon")?.let { if (it.isJsonNull) null else it.asString },
+                            downloads = w.get("downloads")?.asInt ?: 0,
+                            rating = w.get("rating")?.asFloat ?: 0f,
+                            authorName = w.get("author_name")?.asString ?: "?",
+                            contributorRole = w.get("contributor_role")?.asString ?: "member",
+                            contributionPoints = w.get("contribution_points")?.asInt ?: 0,
+                            contributionDescription = w.get("contribution_description")?.let { if (it.isJsonNull) null else it.asString },
+                            teamId = w.get("team_id")?.let { if (it.isJsonNull) null else it.asInt },
+                            teamName = w.get("team_name")?.let { if (it.isJsonNull) null else it.asString },
+                        )
+                    } ?: emptyList()
+                    AuthResult.Success(UserTeamWorksResponse(
+                        works = works,
+                        total = data?.get("total")?.asInt ?: 0,
+                    ))
+                } else {
+                    AuthResult.Error(parseError(responseBody, response.code))
+                }
+            } catch (e: Exception) {
+                AuthResult.Error("网络错误: ${e.message}")
+            }
         }
-    }
 
     private fun parseModuleTeamInfo(d: JsonObject): ModuleTeamInfo {
         val contribs = d.getAsJsonArray("contributors")?.map { el ->
@@ -4221,7 +4266,8 @@ data class CommunityUserProfile(
     val moduleCount: Int = 0, val followerCount: Int = 0,
     val followingCount: Int = 0, val isFollowing: Boolean = false,
     val isDeveloper: Boolean = false,
-    val teamBadges: List<TeamBadgeInfo> = emptyList()
+    val teamBadges: List<TeamBadgeInfo> = emptyList(),
+    val createdAt: String? = null
 )
 
 data class TeamBadgeInfo(

@@ -142,16 +142,23 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.togglePostLike(postId)
-                handleResult(result, { likeResult ->
-                    _posts.value = _posts.value.map { p ->
-                        if (p.id == postId) p.copy(
-                            isLiked = likeResult.liked,
-                            likeCount = likeResult.likeCount
-                        ) else p
+                when (result) {
+                    is AuthResult.Success -> {
+                        _posts.value = _posts.value.map { p ->
+                            if (p.id == postId) p.copy(
+                                isLiked = result.data.liked,
+                                likeCount = result.data.likeCount
+                            ) else p
+                        }
                     }
-                }, "操作失败")
+                    is AuthResult.Error -> {
+                        AppLogger.e(TAG, "Like failed: ${result.message}")
+                        _message.value = result.message
+                    }
+                }
             } catch (e: Exception) {
-                _message.value = "操作失败"
+                AppLogger.e(TAG, "Like exception", e)
+                _message.value = e.message ?: "操作失败"
             }
         }
     }
@@ -160,14 +167,19 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.sharePost(postId)
-                handleResult(result, {
-                    _posts.value = _posts.value.map { p ->
-                        if (p.id == postId) p.copy(shareCount = p.shareCount + 1) else p
+                when (result) {
+                    is AuthResult.Success -> {
+                        _posts.value = _posts.value.map { p ->
+                            if (p.id == postId) p.copy(shareCount = p.shareCount + 1) else p
+                        }
                     }
-                    _message.value = "已转发"
-                }, "转发失败")
+                    is AuthResult.Error -> {
+                        AppLogger.e(TAG, "Share failed: ${result.message}")
+                        _message.value = result.message
+                    }
+                }
             } catch (e: Exception) {
-                _message.value = "转发失败"
+                _message.value = e.message ?: "转发失败"
             }
         }
     }
@@ -176,9 +188,12 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.reportPost(postId, reason)
-                handleResult(result, { _message.value = "举报已提交" }, "举报失败")
+                when (result) {
+                    is AuthResult.Success -> _message.value = "举报已提交"
+                    is AuthResult.Error -> _message.value = result.message
+                }
             } catch (e: Exception) {
-                _message.value = "举报失败"
+                _message.value = e.message ?: "举报失败"
             }
         }
     }
@@ -187,13 +202,14 @@ class CommunityViewModel(
     private inline fun <T> handleResult(
         result: AuthResult<T>,
         onSuccess: (T) -> Unit,
-        errorMessage: String = "操作失败"
+        errorMessage: String? = null
     ) {
         when (result) {
             is AuthResult.Success -> onSuccess(result.data)
             is AuthResult.Error -> {
                 AppLogger.e(TAG, "API error: ${result.message}")
-                _message.value = errorMessage
+                // 优先显示服务端返回的真实错误信息
+                _message.value = result.message ?: errorMessage ?: "操作失败"
             }
         }
     }
@@ -365,9 +381,11 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.getUserTeamWorks(userId)
-                handleResult(result, { response ->
-                    _userTeamWorks.value = response.works
-                })
+                if (result is AuthResult.Success) {
+                    _userTeamWorks.value = result.data.works
+                } else if (result is AuthResult.Error) {
+                    AppLogger.e(TAG, "Failed to load team works: ${result.message}")
+                }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to load user team works", e)
             }
@@ -378,9 +396,11 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.getUserPosts(userId)
-                handleResult(result, { response ->
-                    _userPosts.value = response.posts
-                })
+                if (result is AuthResult.Success) {
+                    _userPosts.value = result.data.posts
+                } else if (result is AuthResult.Error) {
+                    AppLogger.e(TAG, "Failed to load user posts: ${result.message}")
+                }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to load user posts", e)
             }
@@ -391,9 +411,11 @@ class CommunityViewModel(
         viewModelScope.launch {
             try {
                 val result = cloudApiClient.getUserActivity(userId)
-                handleResult(result, { activity ->
-                    _userActivity.value = activity
-                })
+                if (result is AuthResult.Success) {
+                    _userActivity.value = result.data
+                } else if (result is AuthResult.Error) {
+                    AppLogger.e(TAG, "Failed to load user activity: ${result.message}")
+                }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to load user activity", e)
             }
@@ -475,10 +497,10 @@ class CommunityViewModel(
         viewModelScope.launch {
             _activityFeedLoading.value = true
             try {
-                val result = cloudApiClient.getCommunityFeed()
-                handleResult(result, { posts ->
-                    // 将帖子同步到 posts 流供 UI 使用
-                    _posts.value = posts
+                // 使用帖子列表接口而非旧的模块 Feed 接口
+                val result = cloudApiClient.listCommunityPosts(page = 1, size = 20)
+                handleResult(result, { response ->
+                    _activityFeed.value = emptyList() // Feed items are separate
                 })
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to load feed", e)

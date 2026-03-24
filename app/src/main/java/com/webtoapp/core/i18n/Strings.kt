@@ -929,6 +929,385 @@ object Strings {
         AppLanguage.ENGLISH -> "Please select at least one tag"
         AppLanguage.ARABIC -> "يرجى اختيار علامة واحدة على الأقل"
     }
+    val communityLoginToPost: String get() = when (lang) {
+        AppLanguage.CHINESE -> "请先登录后再发帖"
+        AppLanguage.ENGLISH -> "Please sign in to create a post"
+        AppLanguage.ARABIC -> "يرجى تسجيل الدخول لإنشاء منشور"
+    }
+
+    // ==================== 社区补充翻译 ====================
+
+    val communityApplication: String get() = when (lang) {
+        AppLanguage.CHINESE -> "应用"
+        AppLanguage.ENGLISH -> "Application"
+        AppLanguage.ARABIC -> "تطبيق"
+    }
+    val communityPublishFailed: String get() = when (lang) {
+        AppLanguage.CHINESE -> "发布失败"
+        AppLanguage.ENGLISH -> "Publish failed"
+        AppLanguage.ARABIC -> "فشل النشر"
+    }
+    val communityNoAppsToLink: String get() = when (lang) {
+        AppLanguage.CHINESE -> "没有可关联的应用"
+        AppLanguage.ENGLISH -> "No apps to link"
+        AppLanguage.ARABIC -> "لا توجد تطبيقات للربط"
+    }
+    val communityConfirm: String get() = when (lang) {
+        AppLanguage.CHINESE -> "确定"
+        AppLanguage.ENGLISH -> "OK"
+        AppLanguage.ARABIC -> "حسناً"
+    }
+    val communityNoRepliesYet: String get() = when (lang) {
+        AppLanguage.CHINESE -> "暂无回复"
+        AppLanguage.ENGLISH -> "No replies yet"
+        AppLanguage.ARABIC -> "لا توجد ردود بعد"
+    }
+    val communityBeFirstReply: String get() = when (lang) {
+        AppLanguage.CHINESE -> "来发表第一条评论吧"
+        AppLanguage.ENGLISH -> "Be the first to reply."
+        AppLanguage.ARABIC -> "كن أول من يرد."
+    }
+    val communityPostNotFound: String get() = when (lang) {
+        AppLanguage.CHINESE -> "帖子不存在"
+        AppLanguage.ENGLISH -> "Post not found"
+        AppLanguage.ARABIC -> "المنشور غير موجود"
+    }
+    val communityLastSeen: String get() = when (lang) {
+        AppLanguage.CHINESE -> "最后上线 %s"
+        AppLanguage.ENGLISH -> "Last seen %s"
+        AppLanguage.ARABIC -> "آخر ظهور %s"
+    }
+    val communityJoined: String get() = when (lang) {
+        AppLanguage.CHINESE -> "加入于 %s"
+        AppLanguage.ENGLISH -> "Joined %s"
+        AppLanguage.ARABIC -> "انضم في %s"
+    }
+    val communityFollowing: String get() = when (lang) {
+        AppLanguage.CHINESE -> "关注"
+        AppLanguage.ENGLISH -> "Following"
+        AppLanguage.ARABIC -> "متابَع"
+    }
+    val communityFollowers: String get() = when (lang) {
+        AppLanguage.CHINESE -> "粉丝"
+        AppLanguage.ENGLISH -> "Followers"
+        AppLanguage.ARABIC -> "متابِعون"
+    }
+    val communityModules: String get() = when (lang) {
+        AppLanguage.CHINESE -> "模块"
+        AppLanguage.ENGLISH -> "Modules"
+        AppLanguage.ARABIC -> "الوحدات"
+    }
+    val communityTeamWorks: String get() = when (lang) {
+        AppLanguage.CHINESE -> "团队作品"
+        AppLanguage.ENGLISH -> "Team Works"
+        AppLanguage.ARABIC -> "أعمال الفريق"
+    }
+    val communityNoModulesYet: String get() = when (lang) {
+        AppLanguage.CHINESE -> "暂无模块"
+        AppLanguage.ENGLISH -> "No modules yet"
+        AppLanguage.ARABIC -> "لا توجد وحدات بعد"
+    }
+    val communityNoModulesHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "发布的模块将显示在这里"
+        AppLanguage.ENGLISH -> "When they publish, they'll show up here."
+        AppLanguage.ARABIC -> "عند نشرها، ستظهر هنا."
+    }
+    val communityNoTeamWorksYet: String get() = when (lang) {
+        AppLanguage.CHINESE -> "暂无团队作品"
+        AppLanguage.ENGLISH -> "No team works yet"
+        AppLanguage.ARABIC -> "لا توجد أعمال فريق بعد"
+    }
+    val communityNoTeamWorksHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "团队贡献将显示在这里"
+        AppLanguage.ENGLISH -> "Team contributions will show up here."
+        AppLanguage.ARABIC -> "ستظهر مساهمات الفريق هنا."
+    }
+    val communityNoActivityData: String get() = when (lang) {
+        AppLanguage.CHINESE -> "暂无活动数据"
+        AppLanguage.ENGLISH -> "No activity data"
+        AppLanguage.ARABIC -> "لا توجد بيانات نشاط"
+    }
+    val communityFollow: String get() = when (lang) {
+        AppLanguage.CHINESE -> "关注"
+        AppLanguage.ENGLISH -> "Follow"
+        AppLanguage.ARABIC -> "متابعة"
+    }
+    val communityFeatured: String get() = when (lang) {
+        AppLanguage.CHINESE -> "⭐ 精选"
+        AppLanguage.ENGLISH -> "⭐ Featured"
+        AppLanguage.ARABIC -> "⭐ مميز"
+    }
+    val communityLead: String get() = when (lang) {
+        AppLanguage.CHINESE -> "🔹 负责人"
+        AppLanguage.ENGLISH -> "🔹 Lead"
+        AppLanguage.ARABIC -> "🔹 قائد"
+    }
+    val communityMember: String get() = when (lang) {
+        AppLanguage.CHINESE -> "成员"
+        AppLanguage.ENGLISH -> "Member"
+        AppLanguage.ARABIC -> "عضو"
+    }
+    val communityPoints: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d 积分"
+        AppLanguage.ENGLISH -> "%d pts"
+        AppLanguage.ARABIC -> "%d نقاط"
+    }
+    val communityNotifications: String get() = when (lang) {
+        AppLanguage.CHINESE -> "通知"
+        AppLanguage.ENGLISH -> "Notifications"
+        AppLanguage.ARABIC -> "الإشعارات"
+    }
+    val communityTabAll: String get() = when (lang) {
+        AppLanguage.CHINESE -> "全部"
+        AppLanguage.ENGLISH -> "All"
+        AppLanguage.ARABIC -> "الكل"
+    }
+    val communityTabActivity: String get() = when (lang) {
+        AppLanguage.CHINESE -> "动态"
+        AppLanguage.ENGLISH -> "Activity"
+        AppLanguage.ARABIC -> "النشاط"
+    }
+    val communityNothingYet: String get() = when (lang) {
+        AppLanguage.CHINESE -> "还没有任何通知"
+        AppLanguage.ENGLISH -> "Nothing to see here — yet"
+        AppLanguage.ARABIC -> "لا شيء لعرضه هنا — بعد"
+    }
+    val communityNothingYetHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "互动消息将在这里显示"
+        AppLanguage.ENGLISH -> "Interactions will show up here."
+        AppLanguage.ARABIC -> "ستظهر التفاعلات هنا."
+    }
+    val communityNoFeedYet: String get() = when (lang) {
+        AppLanguage.CHINESE -> "暂无动态"
+        AppLanguage.ENGLISH -> "No activity yet"
+        AppLanguage.ARABIC -> "لا يوجد نشاط بعد"
+    }
+    val communityNoFeedYetHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "关注其他用户以查看他们的动态"
+        AppLanguage.ENGLISH -> "Follow others to see their activity here."
+        AppLanguage.ARABIC -> "تابع الآخرين لرؤية نشاطهم هنا."
+    }
+    val communityActionPublished: String get() = when (lang) {
+        AppLanguage.CHINESE -> "发布了"
+        AppLanguage.ENGLISH -> "published"
+        AppLanguage.ARABIC -> "نشر"
+    }
+    val communityActionLiked: String get() = when (lang) {
+        AppLanguage.CHINESE -> "点赞了"
+        AppLanguage.ENGLISH -> "liked"
+        AppLanguage.ARABIC -> "أعجب بـ"
+    }
+    val communityActionReplied: String get() = when (lang) {
+        AppLanguage.CHINESE -> "回复了"
+        AppLanguage.ENGLISH -> "replied to"
+        AppLanguage.ARABIC -> "رد على"
+    }
+    val communityActionBookmarked: String get() = when (lang) {
+        AppLanguage.CHINESE -> "收藏了"
+        AppLanguage.ENGLISH -> "bookmarked"
+        AppLanguage.ARABIC -> "أضاف إلى المفضلة"
+    }
+    val communityActionFollowed: String get() = when (lang) {
+        AppLanguage.CHINESE -> "关注了"
+        AppLanguage.ENGLISH -> "followed"
+        AppLanguage.ARABIC -> "تابع"
+    }
+    val communityActionInteracted: String get() = when (lang) {
+        AppLanguage.CHINESE -> "互动了"
+        AppLanguage.ENGLISH -> "interacted with"
+        AppLanguage.ARABIC -> "تفاعل مع"
+    }
+    val communityBookmarks: String get() = when (lang) {
+        AppLanguage.CHINESE -> "收藏夹"
+        AppLanguage.ENGLISH -> "Bookmarks"
+        AppLanguage.ARABIC -> "المفضلة"
+    }
+    val communitySaveForLater: String get() = when (lang) {
+        AppLanguage.CHINESE -> "收藏你感兴趣的内容"
+        AppLanguage.ENGLISH -> "Save posts for later"
+        AppLanguage.ARABIC -> "احفظ المنشورات لوقت لاحق"
+    }
+    val communitySaveForLaterHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "收藏模块，方便以后再次查找"
+        AppLanguage.ENGLISH -> "Bookmark modules to easily find them again in the future."
+        AppLanguage.ARABIC -> "أضف الوحدات للمفضلة للعثور عليها بسهولة في المستقبل."
+    }
+    // formatTimeAgo 相关
+    val timeJustNow: String get() = when (lang) {
+        AppLanguage.CHINESE -> "刚刚"
+        AppLanguage.ENGLISH -> "just now"
+        AppLanguage.ARABIC -> "الآن"
+    }
+    val timeMinutesAgo: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d分钟前"
+        AppLanguage.ENGLISH -> "%dm ago"
+        AppLanguage.ARABIC -> "منذ %d دقيقة"
+    }
+    val timeHoursAgo: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d小时前"
+        AppLanguage.ENGLISH -> "%dh ago"
+        AppLanguage.ARABIC -> "منذ %d ساعة"
+    }
+    val timeDaysAgo: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d天前"
+        AppLanguage.ENGLISH -> "%dd ago"
+        AppLanguage.ARABIC -> "منذ %d يوم"
+    }
+    val timeWeeksAgo: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d周前"
+        AppLanguage.ENGLISH -> "%dw ago"
+        AppLanguage.ARABIC -> "منذ %d أسبوع"
+    }
+    val timeMonthsAgo: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d月前"
+        AppLanguage.ENGLISH -> "%dmo ago"
+        AppLanguage.ARABIC -> "منذ %d شهر"
+    }
+    // formatDuration 相关
+    val durationHourMinute: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d小时%d分"
+        AppLanguage.ENGLISH -> "%dh %dm"
+        AppLanguage.ARABIC -> "%d ساعة %d دقيقة"
+    }
+    val durationMinute: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d分钟"
+        AppLanguage.ENGLISH -> "%dm"
+        AppLanguage.ARABIC -> "%d دقيقة"
+    }
+    val durationLessThanMinute: String get() = when (lang) {
+        AppLanguage.CHINESE -> "<1分钟"
+        AppLanguage.ENGLISH -> "<1m"
+        AppLanguage.ARABIC -> "أقل من دقيقة"
+    }
+
+    // ==================== 社区增强 ====================
+    val communitySearch: String get() = when (lang) {
+        AppLanguage.CHINESE -> "搜索"
+        AppLanguage.ENGLISH -> "Search"
+        AppLanguage.ARABIC -> "بحث"
+    }
+    val communitySearchUsers: String get() = when (lang) {
+        AppLanguage.CHINESE -> "搜索用户"
+        AppLanguage.ENGLISH -> "Search users"
+        AppLanguage.ARABIC -> "البحث عن مستخدمين"
+    }
+    val communitySearchHint: String get() = when (lang) {
+        AppLanguage.CHINESE -> "输入用户名或昵称..."
+        AppLanguage.ENGLISH -> "Enter username or display name..."
+        AppLanguage.ARABIC -> "أدخل اسم المستخدم أو الاسم المعروض..."
+    }
+    val communityNoUsersFound: String get() = when (lang) {
+        AppLanguage.CHINESE -> "未找到用户"
+        AppLanguage.ENGLISH -> "No users found"
+        AppLanguage.ARABIC -> "لم يتم العثور على مستخدمين"
+    }
+    val communityFollowersList: String get() = when (lang) {
+        AppLanguage.CHINESE -> "粉丝"
+        AppLanguage.ENGLISH -> "Followers"
+        AppLanguage.ARABIC -> "المتابعون"
+    }
+    val communityFollowingList: String get() = when (lang) {
+        AppLanguage.CHINESE -> "关注"
+        AppLanguage.ENGLISH -> "Following"
+        AppLanguage.ARABIC -> "المتابَعون"
+    }
+    val communityEditProfile: String get() = when (lang) {
+        AppLanguage.CHINESE -> "编辑资料"
+        AppLanguage.ENGLISH -> "Edit Profile"
+        AppLanguage.ARABIC -> "تعديل الملف الشخصي"
+    }
+    val communityMutualFollow: String get() = when (lang) {
+        AppLanguage.CHINESE -> "互相关注"
+        AppLanguage.ENGLISH -> "Mutual"
+        AppLanguage.ARABIC -> "متبادل"
+    }
+    val communityNoFollowers: String get() = when (lang) {
+        AppLanguage.CHINESE -> "还没有粉丝"
+        AppLanguage.ENGLISH -> "No followers yet"
+        AppLanguage.ARABIC -> "لا يوجد متابعون بعد"
+    }
+    val communityNoFollowing: String get() = when (lang) {
+        AppLanguage.CHINESE -> "还没有关注任何人"
+        AppLanguage.ENGLISH -> "Not following anyone yet"
+        AppLanguage.ARABIC -> "لا يتابع أي شخص بعد"
+    }
+    val communityDeletePost: String get() = when (lang) {
+        AppLanguage.CHINESE -> "删除帖子"
+        AppLanguage.ENGLISH -> "Delete Post"
+        AppLanguage.ARABIC -> "حذف المنشور"
+    }
+    val communityDeleteConfirm: String get() = when (lang) {
+        AppLanguage.CHINESE -> "确定删除这条帖子吗？"
+        AppLanguage.ENGLISH -> "Delete this post?"
+        AppLanguage.ARABIC -> "هل تريد حذف هذا المنشور؟"
+    }
+
+    // ==================== 模块详情补充 ====================
+    val communityPost: String get() = when (lang) {
+        AppLanguage.CHINESE -> "帖子"
+        AppLanguage.ENGLISH -> "Post"
+        AppLanguage.ARABIC -> "منشور"
+    }
+    val communityPostYourReply: String get() = when (lang) {
+        AppLanguage.CHINESE -> "发表你的回复"
+        AppLanguage.ENGLISH -> "Post your reply"
+        AppLanguage.ARABIC -> "اكتب ردك"
+    }
+    val communityShowMoreReplies: String get() = when (lang) {
+        AppLanguage.CHINESE -> "展开更多回复"
+        AppLanguage.ENGLISH -> "Show more replies"
+        AppLanguage.ARABIC -> "عرض المزيد من الردود"
+    }
+    val communityReportTitle: String get() = when (lang) {
+        AppLanguage.CHINESE -> "举报"
+        AppLanguage.ENGLISH -> "Report"
+        AppLanguage.ARABIC -> "إبلاغ"
+    }
+    val communityReportWhy: String get() = when (lang) {
+        AppLanguage.CHINESE -> "举报原因是什么？"
+        AppLanguage.ENGLISH -> "Why are you reporting this?"
+        AppLanguage.ARABIC -> "لماذا تبلغ عن هذا؟"
+    }
+    val communityReportSubmit: String get() = when (lang) {
+        AppLanguage.CHINESE -> "提交"
+        AppLanguage.ENGLISH -> "Submit"
+        AppLanguage.ARABIC -> "إرسال"
+    }
+    val communityReportSpam: String get() = when (lang) {
+        AppLanguage.CHINESE -> "垃圾信息"
+        AppLanguage.ENGLISH -> "Spam"
+        AppLanguage.ARABIC -> "رسائل مزعجة"
+    }
+    val communityReportInappropriate: String get() = when (lang) {
+        AppLanguage.CHINESE -> "不当内容"
+        AppLanguage.ENGLISH -> "Inappropriate content"
+        AppLanguage.ARABIC -> "محتوى غير لائق"
+    }
+    val communityReportMalicious: String get() = when (lang) {
+        AppLanguage.CHINESE -> "恶意代码"
+        AppLanguage.ENGLISH -> "Malicious code"
+        AppLanguage.ARABIC -> "شيفرة خبيثة"
+    }
+    val communityReportCopyright: String get() = when (lang) {
+        AppLanguage.CHINESE -> "版权侵犯"
+        AppLanguage.ENGLISH -> "Copyright violation"
+        AppLanguage.ARABIC -> "انتهاك حقوق النشر"
+    }
+    val communityReportOther: String get() = when (lang) {
+        AppLanguage.CHINESE -> "其他"
+        AppLanguage.ENGLISH -> "Other"
+        AppLanguage.ARABIC -> "أخرى"
+    }
+    val communityDownloads: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d 次下载"
+        AppLanguage.ENGLISH -> "%d downloads"
+        AppLanguage.ARABIC -> "%d تنزيل"
+    }
+    val communityRatings: String get() = when (lang) {
+        AppLanguage.CHINESE -> "%d 个评分"
+        AppLanguage.ENGLISH -> "%d ratings"
+        AppLanguage.ARABIC -> "%d تقييم"
+    }
 
     // ==================== 高级数据看板 ====================
     val analyticsOpens: String get() = when (lang) {

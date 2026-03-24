@@ -119,15 +119,8 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(isDarkTheme, themeColors.background) {
                     val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
                     
-                    // 使用当前主题的背景色作为状态栏颜色
-                    val bgColor = themeColors.background
-                    val statusBarArgb = android.graphics.Color.argb(
-                        (bgColor.alpha * 255).toInt(),
-                        (bgColor.red * 255).toInt(),
-                        (bgColor.green * 255).toInt(),
-                        (bgColor.blue * 255).toInt()
-                    )
-                    window.statusBarColor = statusBarArgb
+                    // 状态栏透明 — 沉浸式
+                    window.statusBarColor = android.graphics.Color.TRANSPARENT
                     windowInsetsController.isAppearanceLightStatusBars = !isDarkTheme
                     
                     // 导航栏保持透明

@@ -14,9 +14,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -84,11 +82,14 @@ import com.webtoapp.ui.screens.community.FavoritesScreen
 import com.webtoapp.ui.screens.community.ModuleDetailScreen
 import com.webtoapp.ui.screens.community.NotificationsScreen
 import com.webtoapp.ui.screens.community.UserProfileScreen
+import com.webtoapp.ui.screens.community.PostDetailScreen
 import com.webtoapp.ui.viewmodel.AuthViewModel
 import com.webtoapp.ui.viewmodel.CloudViewModel
 import com.webtoapp.ui.viewmodel.CommunityViewModel
 import com.webtoapp.ui.viewmodel.MainViewModel
 import com.webtoapp.ui.webview.WebViewActivity
+import com.webtoapp.ui.components.LiquidTabBar
+import com.webtoapp.ui.components.LiquidTabItem
 
 /**
  * 导航路由定义
@@ -222,42 +223,29 @@ fun AppNavigation() {
 
     Scaffold(
         containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (!isOnDetailScreen) {
-                NavigationBar(
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-                    tonalElevation = 0.dp,
-                    windowInsets = WindowInsets(0, 0, 0, 0)
-                ) {
-                    BottomTab.entries.forEachIndexed { index, tab ->
-                        val selected = selectedTab == index
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                // If on a detail screen, pop back first
-                                if (isOnDetailScreen) {
-                                    navController.popBackStack("tab_host", inclusive = false)
-                                }
-                                selectedTab = index
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = if (selected) tab.selectedIcon else tab.unselectedIcon,
-                                    contentDescription = tab.label()
-                                )
-                            },
-                            label = { Text(tab.label()) },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                                selectedTextColor = MaterialTheme.colorScheme.primary,
-                                indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
-                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                val liquidTabs = remember {
+                    BottomTab.entries.map { tab ->
+                        LiquidTabItem(
+                            selectedIcon = tab.selectedIcon,
+                            unselectedIcon = tab.unselectedIcon,
+                            label = tab.label()
                         )
                     }
                 }
+                LiquidTabBar(
+                    tabs = liquidTabs,
+                    selectedIndex = selectedTab,
+                    onTabSelected = { index ->
+                        if (isOnDetailScreen) {
+                            navController.popBackStack("tab_host", inclusive = false)
+                        }
+                        selectedTab = index
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     ) { scaffoldPadding ->
@@ -365,6 +353,8 @@ fun AppNavigation() {
                 onNavigateToUser = { userId -> navController.navigate(Routes.communityUser(userId)) },
                 onNavigateToModule = { moduleId -> navController.navigate(Routes.moduleDetail(moduleId)) },
                 onNavigateToPost = { postId -> navController.navigate(Routes.communityPost(postId)) },
+                onNavigateToNotifications = { navController.navigate(Routes.NOTIFICATIONS) },
+                onNavigateToFavorites = { navController.navigate(Routes.FAVORITES) },
                 isTabVisible = tab2Active
             )
         }
@@ -1106,10 +1096,10 @@ fun AppNavigation() {
             route = Routes.MODULE_DETAIL,
             arguments = listOf(navArgument("moduleId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val communityViewModel: CommunityViewModel = org.koin.androidx.compose.koinViewModel()
             val moduleId = backStackEntry.arguments?.getInt("moduleId") ?: 0
-            val coroutineScope = rememberCoroutineScope()
+            val communityViewModel: CommunityViewModel = org.koin.androidx.compose.koinViewModel()
             val context = LocalContext.current
+            val coroutineScope = rememberCoroutineScope()
             ModuleDetailScreen(
                 moduleId = moduleId,
                 communityViewModel = communityViewModel,
@@ -1130,13 +1120,15 @@ fun AppNavigation() {
             route = Routes.USER_PROFILE,
             arguments = listOf(navArgument("userId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val communityViewModel: CommunityViewModel = org.koin.androidx.compose.koinViewModel()
             val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+            val communityViewModel: CommunityViewModel = org.koin.androidx.compose.koinViewModel()
             UserProfileScreen(
                 userId = userId,
                 communityViewModel = communityViewModel,
                 onBack = { navController.popBackStack() },
-                onModuleClick = { moduleId -> navController.navigate(Routes.moduleDetail(moduleId)) }
+                onModuleClick = { moduleId -> navController.navigate(Routes.moduleDetail(moduleId)) },
+                onPostClick = { postId -> navController.navigate(Routes.communityPost(postId)) },
+                onNavigateToUser = { uid -> navController.navigate(Routes.communityUser(uid)) }
             )
         }
 
@@ -1160,6 +1152,22 @@ fun AppNavigation() {
                 onNavigateToUser = { userId -> navController.navigate(Routes.communityUser(userId)) }
             )
         }
+
+        // 帖子详情
+        composable(
+            route = Routes.COMMUNITY_POST_DETAIL,
+            arguments = listOf(navArgument("postId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getInt("postId") ?: 0
+            val communityViewModel: CommunityViewModel = org.koin.androidx.compose.koinViewModel()
+            PostDetailScreen(
+                postId = postId,
+                communityViewModel = communityViewModel,
+                onBack = { navController.popBackStack() },
+                onNavigateToUser = { userId -> navController.navigate(Routes.communityUser(userId)) }
+            )
+        }
+
     } // NavHost
     } // Box
     } // Scaffold

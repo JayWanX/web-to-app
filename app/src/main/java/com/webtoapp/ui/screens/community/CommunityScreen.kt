@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.webtoapp.core.auth.AuthResult
 import com.webtoapp.core.cloud.*
+import com.webtoapp.core.auth.TokenManager
 import com.webtoapp.core.i18n.Strings
 import com.webtoapp.ui.components.ThemedBackgroundBox
 import com.webtoapp.ui.components.UserTitleBadges
@@ -45,9 +46,12 @@ fun CommunityScreen(
     onNavigateToUser: (Int) -> Unit,
     onNavigateToModule: (Int) -> Unit,
     onNavigateToPost: (Int) -> Unit = {},
+    onNavigateToNotifications: () -> Unit = {},
+    onNavigateToFavorites: () -> Unit = {},
     isTabVisible: Boolean = true
 ) {
     val apiClient: CloudApiClient = koinInject()
+    val tokenManager: TokenManager = koinInject()
     val communityViewModel: CommunityViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -58,7 +62,9 @@ fun CommunityScreen(
     val isLoadingMore by communityViewModel.feedLoadingMore.collectAsState()
     val isRefreshing by communityViewModel.feedRefreshing.collectAsState()
     val selectedTag by communityViewModel.selectedTag.collectAsState()
+    val unreadCount by communityViewModel.unreadCount.collectAsState()
     var showCreatePost by remember { mutableStateOf(false) }
+    var showSearchSheet by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val availableTags = remember { listOf(
         "html", "css", "javascript", "typescript", "vue", "react", "angular",
@@ -78,6 +84,7 @@ fun CommunityScreen(
     // Initial load
     LaunchedEffect(Unit) {
         if (posts.isEmpty()) communityViewModel.loadPosts()
+        communityViewModel.loadUnreadCount()
     }
 
     // P3 #16: Detect scroll to bottom → load more
@@ -104,9 +111,59 @@ fun CommunityScreen(
     Scaffold(
         containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        Strings.tabCommunity,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                actions = {
+                    // Search
+                    IconButton(onClick = { showSearchSheet = true }) {
+                        Icon(Icons.Outlined.Search, Strings.communitySearch, Modifier.size(21.dp))
+                    }
+                    // Notifications with badge
+                    IconButton(onClick = { onNavigateToNotifications() }) {
+                        BadgedBox(
+                            badge = {
+                                if (unreadCount > 0) {
+                                    Badge(
+                                        containerColor = MaterialTheme.colorScheme.error
+                                    ) {
+                                        Text(
+                                            if (unreadCount > 99) "99+" else "$unreadCount",
+                                            fontSize = 9.sp
+                                        )
+                                    }
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Outlined.Notifications, Strings.communityNotifications, Modifier.size(21.dp))
+                        }
+                    }
+                    // Favorites
+                    IconButton(onClick = { onNavigateToFavorites() }) {
+                        Icon(Icons.Outlined.BookmarkBorder, Strings.communityBookmarks, Modifier.size(21.dp))
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                )
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showCreatePost = true },
+                onClick = {
+                    if (tokenManager.isLoggedIn()) {
+                        showCreatePost = true
+                    } else {
+                        scope.launch { snackbarHostState.showSnackbar(Strings.communityLoginToPost) }
+                    }
+                },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(16.dp),
@@ -120,56 +177,32 @@ fun CommunityScreen(
             modifier = Modifier.fillMaxSize().padding(padding)
         ) {
             Column {
-                // ─── Header ───
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                // ─── Tag Filter Bar ───
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Column {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                Strings.tabCommunity,
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = (-0.5).sp
-                            )
-                            Spacer(Modifier.weight(1f))
-                            IconButton(onClick = { communityViewModel.refreshPosts() }) {
-                                Icon(Icons.Outlined.Refresh, "Refresh", Modifier.size(22.dp))
-                            }
-                        }
-
-                        // ─── Tag Filter Bar ───
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            item {
-                                FilterChip(
-                                    selected = selectedTag == null,
-                                    onClick = { communityViewModel.setSelectedTag(null) },
-                                    label = { Text(Strings.communityAllTags, fontSize = 12.sp) },
-                                    modifier = Modifier.height(30.dp),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                            }
-                            items(availableTags) { tag ->
-                                FilterChip(
-                                    selected = selectedTag == tag,
-                                    onClick = { communityViewModel.setSelectedTag(if (selectedTag == tag) null else tag) },
-                                    label = { Text(tag, fontSize = 12.sp) },
-                                    modifier = Modifier.height(30.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                    leadingIcon = if (selectedTag == tag) {
-                                        { Icon(Icons.Filled.Check, null, Modifier.size(14.dp)) }
-                                    } else null
-                                )
-                            }
-                        }
+                    item {
+                        FilterChip(
+                            selected = selectedTag == null,
+                            onClick = { communityViewModel.setSelectedTag(null) },
+                            label = { Text(Strings.communityAllTags, fontSize = 12.sp) },
+                            modifier = Modifier.height(30.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                    }
+                    items(availableTags) { tag ->
+                        FilterChip(
+                            selected = selectedTag == tag,
+                            onClick = { communityViewModel.setSelectedTag(if (selectedTag == tag) null else tag) },
+                            label = { Text(tag, fontSize = 12.sp) },
+                            modifier = Modifier.height(30.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            leadingIcon = if (selectedTag == tag) {
+                                { Icon(Icons.Filled.Check, null, Modifier.size(14.dp)) }
+                            } else null
+                        )
                     }
                 }
 
@@ -203,6 +236,7 @@ fun CommunityScreen(
                             itemsIndexed(posts, key = { _, p -> p.id }, contentType = { _, _ -> "post" }) { index, post ->
                                 PostCard(
                                     post = post,
+                                    onPostClick = { onNavigateToPost(post.id) },
                                     onLike = { communityViewModel.togglePostLike(post.id) },
                                     onShare = { communityViewModel.sharePost(post.id) },
                                     onComment = { onNavigateToPost(post.id) },
@@ -255,6 +289,18 @@ fun CommunityScreen(
             }
         )
     }
+
+    // ─── Search Users Sheet ───
+    if (showSearchSheet) {
+        SearchUsersSheet(
+            communityViewModel = communityViewModel,
+            onDismiss = { showSearchSheet = false },
+            onUserClick = { userId ->
+                showSearchSheet = false
+                onNavigateToUser(userId)
+            }
+        )
+    }
 }
 
 
@@ -265,6 +311,7 @@ fun CommunityScreen(
 @Composable
 private fun PostCard(
     post: CommunityPostItem,
+    onPostClick: () -> Unit,
     onLike: () -> Unit,
     onShare: () -> Unit,
     onComment: () -> Unit,
@@ -273,7 +320,7 @@ private fun PostCard(
     onAppLinkClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
+    Column(modifier = modifier.fillMaxWidth().clickable { onPostClick() }.padding(horizontal = 16.dp, vertical = 12.dp)) {
         // ── Author Header ──
         Row(verticalAlignment = Alignment.CenterVertically) {
             Surface(
@@ -431,7 +478,7 @@ private fun PostCard(
                         Spacer(Modifier.width(10.dp))
                         Column(Modifier.weight(1f)) {
                             Text(
-                                appLink.appName ?: "Application",
+                                appLink.appName ?: Strings.communityApplication,
                                 fontWeight = FontWeight.SemiBold, fontSize = 13.sp, maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -618,7 +665,7 @@ private fun CreatePostSheet(
                                 appLinks = selectedAppLinks, media = mediaInputs
                             )) {
                                 is AuthResult.Success -> onPosted()
-                                is AuthResult.Error -> snackbarHostState.showSnackbar("发布失败")
+                                is AuthResult.Error -> snackbarHostState.showSnackbar(Strings.communityPublishFailed)
                             }
                             isPublishing = false
                         }
@@ -787,12 +834,12 @@ private fun CreatePostSheet(
                     }
                     if (storeApps.isEmpty()) {
                         item { Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                            Text("没有可关联的应用", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                            Text(Strings.communityNoAppsToLink, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
                         } }
                     }
                 }
             },
-            confirmButton = { TextButton(onClick = { showAppPicker = false }) { Text("确定") } }
+            confirmButton = { TextButton(onClick = { showAppPicker = false }) { Text(Strings.communityConfirm) } }
         )
     }
 }
@@ -838,12 +885,12 @@ fun formatTimeAgo(isoString: String?): String {
         val hours = minutes / 60
         val days = hours / 24
         when {
-            minutes < 1 -> "刚刚"
-            minutes < 60 -> "${minutes}分钟前"
-            hours < 24 -> "${hours}小时前"
-            days < 7 -> "${days}天前"
-            days < 30 -> "${days / 7}周前"
-            else -> "${days / 30}月前"
+            minutes < 1 -> Strings.timeJustNow
+            minutes < 60 -> String.format(Strings.timeMinutesAgo, minutes)
+            hours < 24 -> String.format(Strings.timeHoursAgo, hours)
+            days < 7 -> String.format(Strings.timeDaysAgo, days)
+            days < 30 -> String.format(Strings.timeWeeksAgo, days / 7)
+            else -> String.format(Strings.timeMonthsAgo, days / 30)
         }
     } catch (_: Exception) { isoString }
 }
@@ -852,8 +899,212 @@ fun formatDuration(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
     return when {
-        hours > 0 -> "${hours}h ${minutes}m"
-        minutes > 0 -> "${minutes}m"
-        else -> "<1m"
+        hours > 0 -> String.format(Strings.durationHourMinute, hours, minutes)
+        minutes > 0 -> String.format(Strings.durationMinute, minutes)
+        else -> Strings.durationLessThanMinute
+    }
+}
+
+
+// ═══════════════════════════════════════════
+// User Search Sheet
+// ═══════════════════════════════════════════
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchUsersSheet(
+    communityViewModel: CommunityViewModel,
+    onDismiss: () -> Unit,
+    onUserClick: (Int) -> Unit
+) {
+    val searchResults by communityViewModel.searchResults.collectAsState()
+    val searchLoading by communityViewModel.searchLoading.collectAsState()
+    var query by remember { mutableStateOf("") }
+
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(
+            Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp)
+        ) {
+            Text(Strings.communitySearchUsers, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Spacer(Modifier.height(12.dp))
+            OutlinedTextField(
+                value = query,
+                onValueChange = {
+                    query = it
+                    communityViewModel.searchUsers(it)
+                },
+                placeholder = { Text(Strings.communitySearchHint, fontSize = 14.sp) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                singleLine = true,
+                leadingIcon = { Icon(Icons.Outlined.Search, null, Modifier.size(20.dp)) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { query = ""; communityViewModel.searchUsers("") }) {
+                            Icon(Icons.Filled.Close, null, Modifier.size(18.dp))
+                        }
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f)
+                )
+            )
+            Spacer(Modifier.height(12.dp))
+
+            if (searchLoading) {
+                Box(Modifier.fillMaxWidth().padding(vertical = 24.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
+                }
+            } else if (query.isNotBlank() && searchResults.isEmpty()) {
+                Box(Modifier.fillMaxWidth().padding(vertical = 32.dp), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Outlined.PersonOff, null, Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
+                        Spacer(Modifier.height(8.dp))
+                        Text(Strings.communityNoUsersFound, fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.heightIn(max = 360.dp)
+                ) {
+                    items(searchResults, key = { it.id }) { user ->
+                        UserListRow(
+                            displayName = user.displayName ?: user.username,
+                            username = user.username,
+                            avatarUrl = user.avatarUrl,
+                            isDeveloper = user.isDeveloper,
+                            onClick = { onUserClick(user.id) }
+                        )
+                        if (user != searchResults.last()) {
+                            HorizontalDivider(
+                                Modifier.padding(start = 56.dp),
+                                thickness = 0.5.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ═══════════════════════════════════════════
+// Follower / Following List Sheet
+// ═══════════════════════════════════════════
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FollowerListSheet(
+    title: String,
+    users: List<com.webtoapp.core.cloud.CommunityUserProfile>,
+    emptyText: String,
+    onDismiss: () -> Unit,
+    onUserClick: (Int) -> Unit
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp)) {
+            Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Spacer(Modifier.height(12.dp))
+
+            if (users.isEmpty()) {
+                Box(Modifier.fillMaxWidth().padding(vertical = 32.dp), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Outlined.People, null, Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
+                        Spacer(Modifier.height(8.dp))
+                        Text(emptyText, fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                    }
+                }
+            } else {
+                LazyColumn(modifier = Modifier.heightIn(max = 400.dp)) {
+                    items(users, key = { it.id }) { user ->
+                        UserListRow(
+                            displayName = user.displayName ?: user.username,
+                            username = user.username,
+                            avatarUrl = user.avatarUrl,
+                            isDeveloper = user.isDeveloper,
+                            subtitle = if (user.followerCount > 0) "${user.followerCount} ${Strings.communityFollowersList}" else null,
+                            onClick = { onUserClick(user.id) }
+                        )
+                        if (user != users.last()) {
+                            HorizontalDivider(
+                                Modifier.padding(start = 56.dp),
+                                thickness = 0.5.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ═══════════════════════════════════════════
+// Reusable User Row (for search / follower list)
+// ═══════════════════════════════════════════
+
+@Composable
+private fun UserListRow(
+    displayName: String,
+    username: String,
+    avatarUrl: String?,
+    isDeveloper: Boolean,
+    subtitle: String? = null,
+    onClick: () -> Unit
+) {
+    Row(
+        Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            modifier = Modifier.size(40.dp),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {
+            if (avatarUrl != null) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(avatarUrl).crossfade(true).build(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize().clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        displayName.take(1).uppercase(),
+                        fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(displayName, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                if (isDeveloper) {
+                    Spacer(Modifier.width(4.dp))
+                    Icon(Icons.Filled.Verified, null, Modifier.size(15.dp),
+                        tint = MaterialTheme.colorScheme.primary)
+                }
+            }
+            Text("@$username", fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+            subtitle?.let {
+                Text(it, fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f))
+            }
+        }
+        Icon(Icons.Outlined.ChevronRight, null, Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f))
     }
 }

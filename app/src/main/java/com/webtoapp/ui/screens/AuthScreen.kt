@@ -52,6 +52,7 @@ import com.webtoapp.ui.components.EnhancedElevatedCard
  *
  * 整合登录、注册表单以及忘记密码流程
  */
+@Suppress("UNUSED_PARAMETER")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthScreen(
@@ -203,22 +204,27 @@ fun AuthScreen(
         containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { },
+                title = {
+                    Text(
+                        if (showForgotPassword) "重置密码" else Strings.authCloudService,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        if (showForgotPassword) {
+                    if (showForgotPassword) {
+                        IconButton(onClick = {
                             showForgotPassword = false
                             resetCode = ""
                             resetNewPassword = ""
-                        } else {
-                            onBack()
+                        }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = Strings.back)
                         }
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = Strings.back)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
                 )
             )
         },
@@ -251,7 +257,7 @@ fun AuthScreen(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Logo & 标题
+                // Logo
                 Image(
                     painter = painterResource(id = R.drawable.ic_cloud_service),
                     contentDescription = null,
@@ -261,13 +267,8 @@ fun AuthScreen(
                     )
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    text = if (showForgotPassword) "重置密码" else Strings.authCloudService,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
                 Text(
                     text = if (showForgotPassword) "输入邮箱，获取验证码重置密码"
                            else Strings.authCloudDesc,

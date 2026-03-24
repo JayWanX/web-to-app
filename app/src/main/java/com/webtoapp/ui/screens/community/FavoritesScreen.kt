@@ -25,6 +25,7 @@ import com.webtoapp.core.cloud.CommunityModuleDetail
 import com.webtoapp.ui.viewmodel.CommunityViewModel
 import com.webtoapp.ui.components.ThemedBackgroundBox
 import androidx.compose.ui.graphics.Color
+import com.webtoapp.core.i18n.Strings
 
 /**
  * 收藏/书签 — Jobs-style: 优雅空状态 + 弹簧物理入场 + 毛玻璃分隔
@@ -51,7 +52,7 @@ fun FavoritesScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Bookmarks", fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                        Text(Strings.communityBookmarks, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                         if (favorites.isNotEmpty()) {
                             Text("@me", fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f))
@@ -78,10 +79,10 @@ fun FavoritesScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(horizontal = 40.dp)
                 ) {
-                    Text("Save posts for later", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 34.sp)
+                    Text(Strings.communitySaveForLater, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 34.sp)
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Bookmark modules to easily find them again in the future.",
+                        Strings.communitySaveForLaterHint,
                         fontSize = 14.sp, lineHeight = 20.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
                     )
