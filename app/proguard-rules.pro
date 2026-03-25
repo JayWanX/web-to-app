@@ -191,7 +191,13 @@
 -dontwarn com.google.zxing.**
 -dontwarn com.journeyapps.**
 
-# apksig（编辑器使用）
+# apksig（编辑器使用 — V1/V2/V3 签名引擎）
+# apksig 的 Asn1DerEncoder 使用反射（getDeclaredAnnotation/getDeclaredFields）
+# 读取 @Asn1Class/@Asn1Field 注解来序列化 PKCS#7 SignedData 结构。
+# 如果 R8 剥离了这些注解和字段，签名会失败：
+# "SignatureException: Failed to encode signature block"
+-keep class com.android.apksig.** { *; }
+-keepclassmembers class com.android.apksig.** { *; }
 -dontwarn com.android.apksig.**
 
 # SnakeYAML

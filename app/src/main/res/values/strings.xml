@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 应用名称（ArscRebuilder 支持任意长度的导出名称） -->
+    <!-- 应用名称（ArscRebuilder 重建 string pool，无需预填充空格） -->
     <string name="app_name" translatable="false">WebToApp</string>
     <string name="app_description">将任意网站转换为独立App</string>
 

@@ -160,12 +160,13 @@ class ArscEditor {
     /**
      * 将 ARSC 中 ic_launcher_foreground 的文件路径从 .xml/.jpg 改为 .png
      * 这样 ic_launcher.xml 仍然是 adaptive icon，但前景图会从 PNG 资源加载
+     *
+     * 【复刻 1.8.5】只修改 drawable 前景图路径，不触碰 mipmap-anydpi-v26 的
+     * adaptive icon 定义 XML。那些 XML 需要保留原始引用，由 addAdaptiveIconPngs
+     * 写入对应的前景 PNG 来提供图标内容。
      */
     fun modifyIconPathsToPng(arscData: ByteArray): ByteArray {
-        // 适配多种可能的前景图路径：
-        // - res/drawable/ic_launcher_foreground.xml
-        // - res/drawable/ic_launcher_foreground_new.jpg（当前项目使用）
-        // - res/drawable-anydpi-v24/ic_launcher_foreground.xml（Gradle 常见打包结果）
+        // 【复刻 1.8.5】只修改前景 drawable 路径，不触碰 mipmap-anydpi-v26
         val candidates = listOf(
             "res/drawable/ic_launcher_foreground",
             "res/drawable/ic_launcher_foreground_new",
@@ -178,7 +179,7 @@ class ArscEditor {
         var result = arscData
         var changed = false
 
-        // Support多种扩展名替换：.xml -> .png, .jpg -> .png
+        // 支持多种扩展名替换：.xml -> .png, .jpg -> .png
         val extensionPairs = listOf(
             ".xml" to ".png",
             ".jpg" to ".png"
@@ -191,7 +192,6 @@ class ArscEditor {
 
                 if (oldPath.length != newPath.length) continue
 
-                // 尝试 UTF-8 编码替换
                 val before = result
                 result = replaceBytes(
                     result,
@@ -200,19 +200,7 @@ class ArscEditor {
                 )
                 if (!result.contentEquals(before)) {
                     changed = true
-                    AppLogger.d("ArscEditor", "modifyIconPathsToPng (UTF-8): replaced $oldPath -> $newPath")
-                }
-
-                // 尝试 UTF-16LE 编码替换（ARSC 字符串池可能使用 UTF-16LE）
-                val before16 = result
-                result = replaceBytes(
-                    result,
-                    oldPath.toByteArray(Charsets.UTF_16LE),
-                    newPath.toByteArray(Charsets.UTF_16LE)
-                )
-                if (!result.contentEquals(before16)) {
-                    changed = true
-                    AppLogger.d("ArscEditor", "modifyIconPathsToPng (UTF-16LE): replaced $oldPath -> $newPath")
+                    AppLogger.d("ArscEditor", "modifyIconPathsToPng: replaced $oldPath -> $newPath")
                 }
             }
         }

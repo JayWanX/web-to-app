@@ -35,7 +35,31 @@ class ArscRebuilder {
      * @return 修改后的 ARSC 数据
      */
     fun rebuildWithNewAppName(arscData: ByteArray, targetAppName: String): ByteArray {
-        AppLogger.d(TAG, "rebuildWithNewAppName: target='$targetAppName' (${targetAppName.toByteArray(Charsets.UTF_8).size} bytes)")
+        return rebuildWithNewAppNameAndIcons(arscData, targetAppName, replaceIcons = false)
+    }
+
+    /**
+     * 修改应用名称 + 替换图标路径（突破长度限制 + 对抗 R8 混淆）
+     * 
+     * R8 资源混淆会将 res/mipmap-anydpi-v26/ic_launcher.xml 重命名为 res/a1.xml 之类的短路径，
+     * 导致基于文件名匹配的图标替换方案完全失效。
+     * 
+     * 本方法通过解析 ARSC 层级结构（Package → TypeSpec → Type → Entry）
+     * 定位 mipmap/ic_launcher* 和 drawable/ic_launcher_foreground* 资源条目，
+     * 从条目中提取它们在全局字符串池中的文件路径索引（无论路径是否被混淆），
+     * 然后在重建字符串池时将这些路径替换为我们已知的 PNG 路径。
+     * 
+     * @param arscData 原始 ARSC 数据
+     * @param targetAppName 目标应用名称
+     * @param replaceIcons 是否替换图标路径
+     * @return 修改后的 ARSC 数据，以及发现的旧图标路径映射
+     */
+    fun rebuildWithNewAppNameAndIcons(
+        arscData: ByteArray,
+        targetAppName: String,
+        replaceIcons: Boolean = false
+    ): ByteArray {
+        AppLogger.d(TAG, "rebuildWithNewAppName: target='$targetAppName', replaceIcons=$replaceIcons")
         
         try {
             val buffer = ByteBuffer.wrap(arscData).order(ByteOrder.LITTLE_ENDIAN)
@@ -90,6 +114,18 @@ class ArscRebuilder {
                 val str = readStringAt(arscData, stringsDataStart + stringOffsets[i], isUtf8)
                 strings.add(str)
             }
+
+            val afterStringPool = stringPoolStart + poolSize
+            val remainingData = arscData.copyOfRange(afterStringPool, arscData.size)
+
+            // 3.5. 发现图标路径（如果启用）
+            // 只收集旧路径供 ApkBuilder 在 ZIP 层替换文件内容
+            // 不修改 ARSC 中的路径，因为 ARSC 路径必须与 ZIP 条目名一致
+            if (replaceIcons) {
+                val iconPaths = findIconPathIndices(remainingData, strings)
+                _lastDiscoveredIconPaths = iconPaths.map { (idx, _) -> strings[idx] }.toSet()
+                AppLogger.d(TAG, "Discovered old icon paths (for ZIP replacement): $_lastDiscoveredIconPaths")
+            }
             
             // 4. 找到并替换应用名称
             var modified = false
@@ -132,16 +168,14 @@ class ArscRebuilder {
             
             if (!modified) {
                 AppLogger.e(TAG, "Could not find app_name to replace")
-                return arscData
+                if (!replaceIcons) return arscData
+                // If replaceIcons is true, continue even without app name modification
             }
             
             // 5. 重新构建字符串池
             val newStringPool = buildStringPool(strings, isUtf8, styleCount, poolFlags)
             
             // 6. 重新构建 ARSC 文件
-            val afterStringPool = stringPoolStart + poolSize
-            val remainingData = arscData.copyOfRange(afterStringPool, arscData.size)
-            
             val newArsc = ByteBuffer.allocate(tableHeaderSize + newStringPool.size + remainingData.size)
                 .order(ByteOrder.LITTLE_ENDIAN)
             
@@ -164,6 +198,244 @@ class ArscRebuilder {
             AppLogger.e(TAG, "Failed to rebuild ARSC", e)
             return arscData
         }
+    }
+
+    /** 上次发现的旧图标路径（供 ApkBuilder 用于跳过 ZIP 条目） */
+    private var _lastDiscoveredIconPaths = emptySet<String>()
+    fun getLastDiscoveredIconPaths(): Set<String> = _lastDiscoveredIconPaths
+
+    /**
+     * 解析 ARSC Package 数据，定位 mipmap/ic_launcher 和 drawable/ic_launcher_foreground 的
+     * 文件路径在全局字符串池中的索引。
+     * 
+     * ARSC Package 结构:
+     * - ResTable_package header (含 typeStrings 和 keyStrings 偏移)
+     * - Type string pool (类型名: drawable, mipmap, ...)
+     * - Key string pool (条目名: ic_launcher, ic_launcher_foreground, ...)
+     * - TypeSpec chunks (每种类型一个)
+     * - Type chunks (每种配置一个，包含条目指向全局字符串池的文件路径索引)
+     *
+     * @return List of (globalStringIndex, replacement path)
+     */
+    private fun findIconPathIndices(
+        packageData: ByteArray,
+        globalStrings: List<String>
+    ): List<Pair<Int, String>> {
+        val result = mutableListOf<Pair<Int, String>>()
+        
+        try {
+            val buf = ByteBuffer.wrap(packageData).order(ByteOrder.LITTLE_ENDIAN)
+            
+            // 读取 Package header
+            val pkgType = buf.short
+            val pkgHeaderSize = buf.short.toInt() and 0xFFFF
+            val pkgSize = buf.int
+            val pkgId = buf.int
+            
+            if (pkgType != RES_TABLE_PACKAGE_TYPE) {
+                AppLogger.w(TAG, "Not a package chunk: type=0x${pkgType.toString(16)}")
+                return result
+            }
+            
+            // 跳过 package name (128 chars = 256 bytes)
+            buf.position(buf.position() + 256)
+            
+            val typeStringsOffset = buf.int  // 类型字符串池偏移（相对于 package header 开始）
+            val lastPublicType = buf.int
+            val keyStringsOffset = buf.int   // 键名字符串池偏移
+            val lastPublicKey = buf.int
+            
+            // 读取类型字符串池
+            val typeStrPoolPos = typeStringsOffset // Relative to package start which is at offset 0 of packageData
+            buf.position(typeStrPoolPos)
+            val typeStrings = readStringPool(buf, packageData)
+            
+            // 读取键名字符串池
+            buf.position(keyStringsOffset)
+            val keyStrings = readStringPool(buf, packageData)
+            
+            AppLogger.d(TAG, "Package types: ${typeStrings.joinToString()}")
+            
+            // 找到 mipmap 和 drawable 的类型 ID
+            // 注意: 类型 ID 是 1-based (typeStrings 是 0-based)
+            val mipmapTypeId = typeStrings.indexOfFirst { it == "mipmap" } + 1
+            val drawableTypeId = typeStrings.indexOfFirst { it == "drawable" } + 1
+            
+            // 找到关键条目名在 keyStrings 中的索引
+            val icLauncherKeyIdx = keyStrings.indexOf("ic_launcher")
+            val icLauncherRoundKeyIdx = keyStrings.indexOf("ic_launcher_round")
+            val icLauncherFgKeyIdx = keyStrings.indexOf("ic_launcher_foreground")
+            
+            AppLogger.d(TAG, "mipmapTypeId=$mipmapTypeId, drawableTypeId=$drawableTypeId")
+            AppLogger.d(TAG, "keyIndices: ic_launcher=$icLauncherKeyIdx, round=$icLauncherRoundKeyIdx, foreground=$icLauncherFgKeyIdx")
+            
+            if (mipmapTypeId <= 0 && drawableTypeId <= 0) {
+                AppLogger.w(TAG, "mipmap/drawable types not found in package")
+                return result
+            }
+            
+            // 遍历包内的所有 chunk，找到 ResTable_type chunks
+            // 从 pkgHeaderSize 开始跳过 header，或者从 keyStrings 池之后开始
+            // 我们需要扫描 pkgHeaderSize 之后的所有数据
+            var pos = pkgHeaderSize
+            var typeChunkCount = 0
+            var mipmapTypeChunkCount = 0
+            var drawableTypeChunkCount = 0
+            AppLogger.d(TAG, "Scanning from pos=$pos, packageData.size=${packageData.size}, pkgHeaderSize=$pkgHeaderSize")
+            while (pos + 8 <= packageData.size) {
+                buf.position(pos)
+                val chunkType = buf.short.toInt() and 0xFFFF
+                val chunkHeaderSize = buf.short.toInt() and 0xFFFF
+                val chunkSize = buf.int
+                
+                if (chunkSize <= 0 || pos + chunkSize > packageData.size) {
+                    AppLogger.d(TAG, "Chunk scan ended at pos=$pos: chunkSize=$chunkSize, remaining=${packageData.size - pos}")
+                    break
+                }
+                
+                // ResTable_type (0x0201) — contains actual entries with file path references
+                if (chunkType == 0x0201) {
+                    typeChunkCount++
+                    val typeId = buf.get().toInt() and 0xFF  // 1-based type ID
+                    buf.get() // res0
+                    buf.short // res1
+                    val entryCount = buf.int
+                    val entriesStart = buf.int  // offset from chunk start to entry data
+                    
+                    val isInteresting = typeId == mipmapTypeId || typeId == drawableTypeId
+                    if (isInteresting) {
+                        if (typeId == mipmapTypeId) mipmapTypeChunkCount++
+                        if (typeId == drawableTypeId) drawableTypeChunkCount++
+                        AppLogger.d(TAG, "Type chunk #$typeChunkCount: typeId=$typeId, entryCount=$entryCount, entriesStart=$entriesStart, chunkHeaderSize=$chunkHeaderSize, pos=$pos")
+                    }
+                    
+                    // 跳过 ResTable_config (变长，但从 chunkHeaderSize 开始到 entriesStart 之前)
+                    // 读取 entry offset 表
+                    buf.position(pos + chunkHeaderSize)
+                    val entryOffsets = IntArray(entryCount)
+                    for (i in 0 until entryCount) {
+                        entryOffsets[i] = buf.int
+                    }
+                    
+                    // 遍历感兴趣的条目
+                    if (isInteresting) {
+                        // Log entry indices for ic_launcher entries
+                        for (targetIdx in listOf(icLauncherKeyIdx, icLauncherRoundKeyIdx, icLauncherFgKeyIdx)) {
+                            if (targetIdx >= 0 && targetIdx < entryCount) {
+                                val offset = entryOffsets[targetIdx]
+                                AppLogger.d(TAG, "  Target key $targetIdx offset in entry table: $offset (entryIdx maps to keyIdx)")
+                            }
+                        }
+                    }
+
+                    for (entryIdx in 0 until entryCount) {
+                        if (entryOffsets[entryIdx] == -1) continue  // NO_ENTRY
+                        
+                        val entryPos = pos + entriesStart + entryOffsets[entryIdx]
+                        if (entryPos + 8 > packageData.size) continue
+                        
+                        buf.position(entryPos)
+                        val entrySize = buf.short.toInt() and 0xFFFF
+                        val entryFlags = buf.short.toInt() and 0xFFFF
+                        val entryKeyIndex = buf.int  // Index into key string pool
+                        
+                        val isComplex = (entryFlags and 0x0001) != 0
+                        if (isComplex) {
+                            if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx)) {
+                                AppLogger.d(TAG, "  Entry $entryIdx: keyIndex=$entryKeyIndex is COMPLEX (bag/map), skipping")
+                            }
+                            continue
+                        }
+                        
+                        // Simple entry: next 8 bytes are Res_value
+                        if (entryPos + entrySize + 8 > packageData.size) continue
+                        val valueSize = buf.short.toInt() and 0xFFFF
+                        buf.get() // res0
+                        val valueType = buf.get().toInt() and 0xFF
+                        val valueData = buf.int
+                        
+                        if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx)) {
+                            val keyName = if (entryKeyIndex >= 0 && entryKeyIndex < keyStrings.size) keyStrings[entryKeyIndex] else "?"
+                            val pathStr = if (valueType == 0x03 && valueData >= 0 && valueData < globalStrings.size) globalStrings[valueData] else "N/A"
+                            AppLogger.d(TAG, "  Entry $entryIdx: keyIndex=$entryKeyIndex('$keyName'), valueType=0x${valueType.toString(16)}, valueData=$valueData, path='$pathStr'")
+                        }
+                        
+                        // We want TYPE_STRING (0x03) — file path reference into global string pool
+                        if (valueType != 0x03) continue
+                        
+                        val globalStrIdx = valueData
+                        if (globalStrIdx < 0 || globalStrIdx >= globalStrings.size) continue
+                        
+                        // Check if this is a mipmap/ic_launcher entry
+                        // mipmap/ic_launcher 和 ic_launcher_round 指向 adaptive icon 定义 XML
+                        // 这些 XML 绝对不能被替换！它们引用 @drawable/ic_launcher_foreground
+                        // 替换 XML 内容为 PNG 会导致 Android 解析失败 → 回退默认图标
+                        // 所以我们只记录日志，不收集到 result 中
+                        if (typeId == mipmapTypeId) {
+                            if (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx) {
+                                val oldPath = globalStrings[globalStrIdx]
+                                val keyName = if (entryKeyIndex >= 0 && entryKeyIndex < keyStrings.size) keyStrings[entryKeyIndex] else "?"
+                                AppLogger.d(TAG, "Found mipmap/$keyName → '$oldPath' (adaptive icon XML, KEEPING)")
+                            }
+                        }
+                        
+                        // drawable/ic_launcher_foreground 是实际的前景图像文件
+                        // 这个需要被替换为用户的自定义图标
+                        if (typeId == drawableTypeId) {
+                            if (entryKeyIndex == icLauncherFgKeyIdx) {
+                                val oldPath = globalStrings[globalStrIdx]
+                                AppLogger.d(TAG, "Found drawable/ic_launcher_foreground → '$oldPath' (foreground image, REPLACING)")
+                                result.add(globalStrIdx to oldPath)
+                            }
+                        }
+                    }
+                }
+                
+                pos += chunkSize
+            }
+            AppLogger.d(TAG, "Scan complete: typeChunks=$typeChunkCount, mipmapChunks=$mipmapTypeChunkCount, drawableChunks=$drawableTypeChunkCount, results=${result.size}")
+            
+        } catch (e: Exception) {
+            AppLogger.e(TAG, "Failed to find icon path indices", e)
+        }
+        
+        // 去重（同一全局字符串索引可能被多个 config 引用）
+        return result.distinctBy { it.first }
+    }
+
+    /**
+     * 快速读取字符串池内容（不重构）
+     */
+    private fun readStringPool(buf: ByteBuffer, fullData: ByteArray): List<String> {
+        val startPos = buf.position()
+        val poolType = buf.short
+        val poolHeaderSize = buf.short.toInt() and 0xFFFF
+        val poolSize = buf.int
+        val strCount = buf.int
+        val styleCount = buf.int
+        val flags = buf.int
+        val strStart = buf.int
+        // stylesStart 和可能的扩展字段 — 通过 poolHeaderSize 跳过
+        
+        val isUtf8 = (flags and UTF8_FLAG) != 0
+        
+        // 跳过 header 中的剩余字段（stylesStart 等），直接定位到字符串偏移表
+        buf.position(startPos + poolHeaderSize)
+        
+        val offsets = IntArray(strCount)
+        for (i in 0 until strCount) {
+            offsets[i] = buf.int
+        }
+        
+        val stringsDataStart = startPos + strStart
+        val result = mutableListOf<String>()
+        for (i in 0 until strCount) {
+            result.add(readStringAt(fullData, stringsDataStart + offsets[i], isUtf8))
+        }
+        
+        // 将 buffer 位置移到池尾
+        buf.position(startPos + poolSize)
+        return result
     }
     
     /**

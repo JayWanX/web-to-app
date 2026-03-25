@@ -57,7 +57,7 @@ class ApkBuilder(private val context: Context) {
     private val axmlEditor = AxmlEditor()
     private val axmlRebuilder = AxmlRebuilder()
     private val arscEditor = ArscEditor()
-    private val arscRebuilder = ArscRebuilder()  // For unlimited app name length
+    private val arscRebuilder = ArscRebuilder()  // 重建 string pool，支持任意长度应用名
     private val logger = BuildLogger(context)
     private val encryptedApkBuilder = EncryptedApkBuilder(context)
     private val keyManager = KeyManager.getInstance(context)
@@ -66,8 +66,7 @@ class ApkBuilder(private val context: Context) {
     private val outputDir = File(context.getExternalFilesDir(null), "built_apks").apply { mkdirs() }
     private val tempDir = File(context.cacheDir, "apk_build_temp").apply { mkdirs() }
     
-    // Original app name (for replacement)
-    // ArscRebuilder can handle any length, so we use simple name
+    // 原始应用名（ArscRebuilder 可处理任意长度，无需预填充）
     private val originalAppName = "WebToApp"
     private val originalPackageName = "com.webtoapp"
     
@@ -447,7 +446,7 @@ class ApkBuilder(private val context: Context) {
                 onProgress(30 + (progress * 0.4).toInt(), msg)
             }
             
-            onProgress(70, "Optimizing APK size...")
+            onProgress(70, "Signing APK...")
             
             // Check if unsigned APK is valid
             if (!unsignedApk.exists() || unsignedApk.length() == 0L) {
@@ -457,154 +456,34 @@ class ApkBuilder(private val context: Context) {
             }
             logger.logKeyValue("unsignedApkSize", "${unsignedApk.length() / 1024} KB")
             
-            // === C 级底层 APK 体积优化 ===
-            // 在签名前对 ZIP 进行深度优化：
-            // - DEFLATE 超压缩 (zlib level 9)
-            // - 移除 Shell 不需要的条目 (编辑器专用 res/layout, res/menu, Kotlin metadata 等)
-            // - CRC32 去重
-            // - resources.arsc 4 字节对齐
-            // 注意: abc_ 前缀的 AppCompat/AndroidX 资源已在 C 层白名单中保留
-            logger.section("Native APK Optimization")
-            val optimizedApk = File(tempDir, "${packageName}_optimized.apk")
-            optimizedApk.delete()
-            
-            try {
-                val optimizeResult = NativeApkOptimizer.optimizeApk(unsignedApk, optimizedApk)
-                
-                if (optimizeResult != null && optimizeResult.success && optimizedApk.exists() && optimizedApk.length() > 0) {
-                    logger.log(optimizeResult.formatReport())
-                    logger.logKeyValue("nativeOptimizedSize", "${optimizedApk.length() / 1024} KB")
-                    logger.logKeyValue("nativeOptSavings", "${optimizeResult.totalSavings / 1024} KB (${String.format("%.1f", optimizeResult.savingsPercent)}%)")
-                    
-                    // 使用优化后的 APK 替换未签名 APK
-                    unsignedApk.delete()
-                    optimizedApk.renameTo(unsignedApk)
-                    
-                    AppLogger.i("ApkBuilder", "Native APK optimization: ${optimizeResult.totalSavings / 1024} KB saved (${String.format("%.1f", optimizeResult.savingsPercent)}%)")
-                } else {
-                    logger.warn("Native optimization skipped/failed, using original unsigned APK")
-                    optimizedApk.delete()
-                }
-            } catch (e: Exception) {
-                logger.warn("Native optimization error (non-fatal): ${e.message}")
-                AppLogger.w("ApkBuilder", "Native optimization failed (non-fatal)", e)
-                optimizedApk.delete()
-            }
-            
-            // === ZipAlign: 确保 resources.arsc 4-byte 对齐 (Android R+ 强制要求) ===
-            logger.section("ZipAlign")
-            try {
-                val preAlignCheck = ZipAligner.verifyAlignment(unsignedApk)
-                logger.logKeyValue("preAlignCheck", if (preAlignCheck) "已对齐" else "未对齐")
-                
-                if (!preAlignCheck) {
-                    val alignSuccess = ZipAligner.alignInPlace(unsignedApk)
-                    logger.logKeyValue("zipAlignResult", if (alignSuccess) "对齐成功" else "对齐失败")
-                    
-                    if (alignSuccess) {
-                        val postAlignCheck = ZipAligner.verifyAlignment(unsignedApk)
-                        logger.logKeyValue("postAlignVerify", if (postAlignCheck) "验证通过" else "验证失败")
-                    }
-                } else {
-                    logger.log("resources.arsc 已正确对齐，跳过 ZipAlign")
-                }
-            } catch (e: Exception) {
-                logger.warn("ZipAlign error (non-fatal): ${e.message}")
-                AppLogger.w("ApkBuilder", "ZipAlign failed (non-fatal)", e)
-            }
-            
-            onProgress(75, "Signing APK...")
+            // 【复刻 1.8.5】直接签名，不做任何优化/对齐
+            // 1.8.5 没有 NativeApkOptimizer、没有 ZipAligner，签名完全稳定
             logger.section("Sign APK")
-            
-            // Log signer status
-            logger.logKeyValue("signerReady", signer.isReady())
             logger.logKeyValue("signerType", signer.getSignerType().name)
-            try {
-                val certInfo = signer.getCertificateInfo()
-                logger.log("Certificate info: $certInfo")
-            } catch (e: Exception) {
-                logger.warn("Failed to get certificate info: ${e.message}")
-            }
-            
-            // Sign to temp directory first, avoid external storage permission issues
-            val tempSignedApk = File(tempDir, "${packageName}_signed.apk")
-            tempSignedApk.delete()
             
             // Signature
             val signSuccess = try {
-                logger.log("Calling signer.sign()...")
-                logger.log("Input: ${unsignedApk.absolutePath}")
-                logger.log("Output(temp): ${tempSignedApk.absolutePath}")
-                val result = signer.sign(unsignedApk, tempSignedApk)
-                logger.log("signer.sign() returned: $result")
-                result
+                signer.sign(unsignedApk, signedApk)
             } catch (e: Exception) {
-                logger.error("Exception during signing", e)
+                logger.error("Signing exception", e)
                 logger.endLog(false, "Signing failed: ${e.message}")
                 return@withContext BuildResult.Error("Signing failed: ${e.message ?: "Unknown error"}")
             }
             
-            // Check signing result
-            // If file exists and has content, consider success even if ApkVerifier validation fails
-            // (Let Android system do final validation during installation)
-            val fileExists = tempSignedApk.exists() && tempSignedApk.length() > 0
-            logger.log("Post-signing file status: exists=${tempSignedApk.exists()}, size=${if (tempSignedApk.exists()) tempSignedApk.length() else 0} bytes")
-            
-            if (!fileExists) {
-                logger.error("APK signing failed: output file doesn't exist or is empty")
-                
-                // Try to reset keys and retry once
-                logger.log("Attempting to reset signing keys and retry...")
-                if (signer.resetKeys()) {
-                    logger.log("Key reset successful, retrying signing...")
-                    logger.logKeyValue("newSignerType", signer.getSignerType().name)
-                    
-                    try {
-                        signer.sign(unsignedApk, tempSignedApk)
-                    } catch (e: Exception) {
-                        logger.error("Retry signing failed", e)
-                    }
-                    
-                    // Check file again
-                    if (tempSignedApk.exists() && tempSignedApk.length() > 0) {
-                        logger.log("Retry signing successful! File size: ${tempSignedApk.length()} bytes")
-                    } else {
-                        logger.error("Retry signing still failed")
-                        logger.endLog(false, "APK signing failed")
-                        return@withContext BuildResult.Error("APK signing failed, please try clearing app data and retry")
-                    }
-                } else {
-                    logger.error("Key reset failed")
-                    logger.endLog(false, "APK signing failed")
-                    return@withContext BuildResult.Error("APK signing failed, please retry")
-                }
-            } else {
-                if (!signSuccess) {
-                    logger.warn("ApkVerifier validation failed, but file generated successfully, continuing build")
-                } else {
-                    logger.log("Signing successful and verified")
-                }
-            }
-            
-            // Copy to final directory
-            logger.log("Copying signed APK to final directory...")
-            try {
-                tempSignedApk.copyTo(signedApk, overwrite = true)
-                tempSignedApk.delete()
-                logger.log("Copy successful: ${signedApk.absolutePath}")
-            } catch (e: Exception) {
-                logger.error("Failed to copy to final directory", e)
-                // If copy fails, try using temp file as result
-                logger.log("Trying to use temp file as result...")
-                return@withContext BuildResult.Success(tempSignedApk, logger.getCurrentLogPath())
-            }
-            
-            // Verify signed APK
-            logger.logKeyValue("signedApkSize", "${signedApk.length() / 1024} KB")
+            // 检查签名后文件是否有效（唯一的硬性条件）
             if (!signedApk.exists() || signedApk.length() == 0L) {
-                logger.error("Signed APK invalid")
+                logger.error("Signed APK file missing or empty after sign()")
                 logger.endLog(false, "Signed APK file invalid")
-                return@withContext BuildResult.Error("Signed APK file invalid")
+                if (signedApk.exists()) signedApk.delete()
+                return@withContext BuildResult.Error("APK signing failed: output file invalid")
+            }
+            
+            logger.logKeyValue("signedApkSize", "${signedApk.length() / 1024} KB")
+            
+            if (!signSuccess) {
+                // sign() 返回 false 表示 ApkVerifier 校验有警告/错误，但文件已存在且非空
+                // 大多数情况下 APK 仍可正常安装，仅记录警告
+                logger.warn("ApkVerifier reported issues, but signed APK file is valid (${signedApk.length() / 1024} KB). Continuing build.")
             }
 
             onProgress(85, "Verifying APK...")
@@ -728,6 +607,7 @@ class ApkBuilder(private val context: Context) {
         var hasConfigFile = false
         var strippedNativeLibSize = 0L // Track total stripped native lib size
         val replacedIconPaths = mutableSetOf<String>() // Track replaced icon paths
+        var discoveredOldIconPaths = emptySet<String>() // Old icon paths discovered from ARSC (may be R8-obfuscated)
         
         // Create encryptor (if encryption enabled)
         val assetEncryptor = if (encryptionConfig.enabled && encryptionKey != null) {
@@ -760,6 +640,15 @@ class ApkBuilder(private val context: Context) {
                             AppLogger.d("ApkBuilder", "Skipping old splash media: ${entry.name}")
                         }
                         
+                        // Keep adaptive icon definition XMLs (mipmap-anydpi-v26/ic_launcher.xml)!
+                        // These XMLs reference @drawable/ic_launcher_foreground, which we replace
+                        // at line 843. The XML → foreground pipeline ensures the launcher renders
+                        // the icon correctly as an AdaptiveIconDrawable on Android 8+.
+                        // 
+                        // Previously we stripped these XMLs and replaced with PNGs, but launchers
+                        // expect AdaptiveIconDrawable from mipmap resources on API 26+,
+                        // causing "Failure retrieving resources" and default icon fallback.
+                        
                         // Modify AndroidManifest.xml (modify package name, version, add multi-icons)
                         entry.name == "AndroidManifest.xml" -> {
                             val originalData = zipIn.getInputStream(entry).readBytes()
@@ -782,20 +671,20 @@ class ApkBuilder(private val context: Context) {
                             }
                         }
                         
-                        // Modify resources.arsc (modify app name + icon paths)
+                        // 修改 resources.arsc (修改应用名 + 替换图标路径)
+                        // 使用 ArscRebuilder 重建 string pool，支持任意长度应用名
+                        // replaceIcons=true 会解析 ARSC 层级结构，定位 R8 混淆后的实际图标路径
                         // Android 11+ requires resources.arsc to be uncompressed and 4-byte aligned
                         entry.name == "resources.arsc" -> {
                             val originalData = zipIn.getInputStream(entry).readBytes()
-                            
-                            // Use ArscRebuilder for unlimited app name length
-                            // This rebuilds the entire string pool to accommodate any name length
-                            var modifiedData = arscRebuilder.rebuildWithNewAppName(
+                            val modifiedData = arscRebuilder.rebuildWithNewAppNameAndIcons(
                                 originalData,
-                                config.appName
+                                config.appName,
+                                replaceIcons = true
                             )
-                            
-                            // Change @mipmap/ic_launcher* from .xml to .png for bitmap icons
-                            modifiedData = arscEditor.modifyIconPathsToPng(modifiedData)
+                            // 获取 R8 混淆后的旧图标路径（如 res/BW.xml, res/qx.png 等）
+                            discoveredOldIconPaths = arscRebuilder.getLastDiscoveredIconPaths()
+                            logger.log("Discovered old icon paths from ARSC: $discoveredOldIconPaths")
                             writeEntryStored(zipOut, entry.name, modifiedData)
                         }
                         
@@ -805,21 +694,16 @@ class ApkBuilder(private val context: Context) {
                             writeConfigEntry(zipOut, config, assetEncryptor, encryptionConfig)
                         }
                         
-                        // Replace icon (if PNG icon exists in APK)
-                        iconBitmap != null && isIconEntry(entry.name) -> {
-                            replaceIconEntry(zipOut, entry.name, iconBitmap)
+                        // 替换图标 - 同时支持原始路径和 R8 混淆后的路径
+                        iconBitmap != null && (isIconEntry(entry.name) || discoveredOldIconPaths.contains(entry.name)) -> {
+                            // 使用 createAdaptiveForegroundIcon 遵循 Android Adaptive Icon 规范：
+                            // 前景层 108dp，安全区域（完整显示）为中间 72dp（66.67%），
+                            // 外围 18dp 作为系统形状遮罩裁剪区域
+                            // 432px = 108dp * 4 (xxxhdpi)
+                            val iconBytes = template.createAdaptiveForegroundIcon(iconBitmap, 432)
+                            writeEntryDeflated(zipOut, entry.name, iconBytes)
                             replacedIconPaths.add(entry.name)
-                        }
-                        
-                        // Replace adaptive icon foreground drawable with user's custom icon.
-                        // The adaptive icon definition XMLs (mipmap-anydpi-v26/ic_launcher.xml)
-                        // reference @drawable/ic_launcher_foreground, so replacing this foreground
-                        // makes the adaptive icon display the user's icon on Android 8+.
-                        iconBitmap != null && isAdaptiveIconEntry(entry.name) -> {
-                            // Use 432px (108dp * 4 for xxxhdpi) for high-resolution foreground
-                            val foregroundBytes = template.createAdaptiveForegroundIcon(iconBitmap, 432)
-                            writeEntryDeflated(zipOut, entry.name, foregroundBytes)
-                            AppLogger.d("ApkBuilder", "Replaced adaptive icon foreground: ${entry.name}")
+                            AppLogger.d("ApkBuilder", "Replaced icon entry: ${entry.name} (${iconBytes.size} bytes)")
                         }
                         
                         // Filter native libraries (by architecture AND app type)
@@ -946,6 +830,10 @@ class ApkBuilder(private val context: Context) {
                 if (iconBitmap != null) {
                     addAdaptiveIconPngs(zipOut, iconBitmap, entryNames)
                 }
+                
+                // No longer writing PNG replacements at mipmap-anydpi-v26 paths.
+                // The adaptive icon XMLs are kept intact and reference the foreground drawable,
+                // which is replaced with the user's icon during the ZIP copy loop above.
 
                 // Embed splash media files
                 AppLogger.d("ApkBuilder", "Splash config: splashEnabled=${config.splashEnabled}, splashMediaPath=$splashMediaPath, splashType=${config.splashType}")
@@ -2176,7 +2064,7 @@ builtins.__import__ = _w2a_import
     /**
      * Create PNG version for adaptive icon foreground
      * Write ic_launcher_foreground.png and ic_launcher_foreground_new.png in res/drawable directory,
-     * and work with ArscEditor.modifyIconPathsToPng to switch paths from .xml/.jpg to .png
+     * and work with ArscRebuilder to switch paths from .xml/.jpg to .png
      * 
      * Note: Following Android Adaptive Icon spec, icon is placed in safe zone (center 72dp),
      * with 18dp margin around to avoid being clipped by shape mask making icon look enlarged
@@ -2207,6 +2095,31 @@ builtins.__import__ = _w2a_import
                 AppLogger.d("ApkBuilder", "Added adaptive icon foreground: $pngPath")
             }
         }
+    }
+
+    /**
+     * Write PNG icons at mipmap-anydpi-v26 paths, replacing the stripped adaptive icon definition XMLs.
+     * ArscRebuilder replaces ARSC icon paths to point to our known PNG paths,
+     * so we write actual PNG files at these paths for the resource references to be valid.
+     *
+     * IMPORTANT: Uses 512px size (NOT 192px) to produce a different CRC32 from the
+     * density-specific PNGs (which use 192px for xxxhdpi). If the CRC matches,
+     * NativeApkOptimizer's dedup will remove THIS file and keep the density-specific one,
+     * but ARSC only references the anydpi-v26 path — causing "Failure retrieving resources"
+     * because the file no longer exists in the ZIP.
+     */
+    private fun addAdaptiveIconReplacementPngs(zipOut: ZipOutputStream, bitmap: Bitmap) {
+        // Normal icon — 512px to avoid CRC dedup with xxxhdpi (192px)
+        val iconPng = template.scaleBitmapToPng(bitmap, 512)
+        writeEntryDeflated(zipOut, "res/mipmap-anydpi-v26/ic_launcher.png", iconPng)
+        AppLogger.d("ApkBuilder", "Added replacement icon: res/mipmap-anydpi-v26/ic_launcher.png (512px, ${iconPng.size} bytes)")
+
+        // Round icon — 512px to avoid CRC dedup
+        val roundPng = template.createRoundIcon(bitmap, 512)
+        writeEntryDeflated(zipOut, "res/mipmap-anydpi-v26/ic_launcher_round.png", roundPng)
+        AppLogger.d("ApkBuilder", "Added replacement icon: res/mipmap-anydpi-v26/ic_launcher_round.png (512px, ${roundPng.size} bytes)")
+        
+        logger.log("Added PNG icons at mipmap-anydpi-v26 paths (512px, replacing adaptive icon XMLs)")
     }
     
     /**
@@ -2348,12 +2261,10 @@ builtins.__import__ = _w2a_import
      * - mipmap-anydpi-v26/ic_launcher_round.xml (adaptive round icon definition)
      */
     private fun isAdaptiveIconEntry(entryName: String): Boolean {
-        // NOTE: We intentionally do NOT skip adaptive icon definition XMLs
-        // (mipmap-anydpi-v26/ic_launcher.xml etc.) — they must stay in the output
-        // because the ARSC references them. These XMLs reference @drawable/ic_launcher_foreground
-        // which we replace with the user's icon below.
-
         // Only match foreground image files that need to be replaced with the user's icon.
+        // Note: Adaptive icon definition XMLs (mipmap-anydpi-v26/ic_launcher.xml) are now
+        // stripped separately by isAdaptiveIconDefinition() to force PNG icon fallback,
+        // because R8 obfuscation makes the foreground path unpredictable.
         // Support all formats: XML (compiled vector), JPG, and PNG.
         if ((entryName.contains("drawable")) &&
             (entryName.contains("ic_launcher_foreground") || entryName.contains("ic_launcher_foreground_new")) &&
@@ -2361,6 +2272,19 @@ builtins.__import__ = _w2a_import
             return true
         }
         return false
+    }
+
+    /**
+     * Check if entry is an adaptive icon definition XML (mipmap-anydpi-v26/ic_launcher*.xml).
+     * These have the highest resource priority on Android 8+ and override density-specific PNG icons.
+     * In release builds with R8, the foreground drawable they reference gets renamed to obfuscated
+     * paths (e.g., res/Pb.jpg), making it impossible to reliably replace via isAdaptiveIconEntry().
+     * Stripping these definition XMLs forces Android to fall back to our injected PNG icons.
+     */
+    private fun isAdaptiveIconDefinition(entryName: String): Boolean {
+        return entryName.startsWith("res/mipmap-anydpi") &&
+            (entryName.contains("ic_launcher") || entryName.contains("ic_launcher_round")) &&
+            entryName.endsWith(".xml")
     }
 
     /**

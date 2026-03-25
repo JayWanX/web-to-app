@@ -177,6 +177,12 @@ static int is_strippable_resource(const char *name, int name_len) {
         /* 框架资源一律保留，不管在哪个资源目录下 */
         if (is_framework_resource(filename)) return 0;
         
+        /* 图标相关资源一律保留 — 包括 foreground、background、round 等 */
+        if (strstr(name, "ic_launcher") != NULL) return 0;
+        
+        /* mipmap 资源一律保留 (图标) */
+        if (strncmp(name, "res/mipmap", 10) == 0) return 0;
+        
         /* res/layout*  — 裁剪非框架的自定义 XML 布局 */
         if (strncmp(name, "res/layout", 10) == 0) return 1;
         /* res/menu*    — Shell 不使用 XML 菜单 */
@@ -199,8 +205,6 @@ static int is_strippable_resource(const char *name, int name_len) {
          * 因为这些主要是编辑器 UI 使用的图标 */
         if (strncmp(name, "res/drawable-", 13) == 0 &&
             strstr(name, "nodpi") == NULL) {
-            /* 检查是否为图标相关 — 如果是 ic_launcher 则保留 */
-            if (strstr(name, "ic_launcher") != NULL) return 0;
             return 1;
         }
     }
@@ -807,7 +811,14 @@ static int optimize_apk(const char *input_path, const char *output_path,
         }
         
         /* 5c. CRC32 去重检查 */
-        if (dedup_check_and_add(e->crc32, e->uncompressed_size)) {
+        /* 跳过图标相关文件的去重 — 这些文件虽然 CRC 相同,
+         * 但 ARSC 的不同 config (v24, anydpi-v24 等) 可能引用它们,
+         * 删除会导致 "Failure retrieving resources" */
+        int skip_dedup = 0;
+        if (strstr(e->name, "ic_launcher") != NULL) skip_dedup = 1;
+        if (strncmp(e->name, "res/mipmap", 10) == 0) skip_dedup = 1;
+        
+        if (!skip_dedup && dedup_check_and_add(e->crc32, e->uncompressed_size)) {
             stats->entries_deduplicated++;
             stats->dedup_savings += e->compressed_size;
             LOGD("DEDUP: %s (saved %u bytes)", e->name, e->compressed_size);
