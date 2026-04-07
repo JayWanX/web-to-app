@@ -4,9 +4,9 @@
 
 # WebToApp
 
-### 🚀 Transform Websites into Android Apps in Seconds
+### 🚀 秒速将网站转换为 Android 应用
 
-**English** | [简体中文](README_CN.md)
+[English](README_EN.md) | **简体中文**
 
 <p>
   <a href="https://github.com/shiahonb777/web-to-app/stargazers"><img src="https://img.shields.io/github/stars/shiahonb777/web-to-app?style=for-the-badge&logo=github&color=f4c542" alt="Stars"></a>
@@ -23,7 +23,7 @@
 
 <br/>
 
-> 📱 **No coding required** · Build APKs directly on your phone · **No Android Studio needed**
+> 📱 **无需编程** · 手机上直接构建 APK · **无需 Android Studio**
 
 <br/>
 
@@ -32,752 +32,728 @@
 ---
 
 <p align="center">
-  <b>🌟 Zero coding • One-click build • Feature-rich • Open source & free 🌟</b>
+  <b>🌟 零编程 • 一键构建 • 功能丰富 • 开源免费 🌟</b>
 </p>
 
 ---
 
-## 📚 Table of Contents
-
-<details open>
-<summary><b>Click to expand/collapse</b></summary>
-
-- [✨ Key Features](#-key-features)
-- [📸 Screenshots](#-screenshots)
-- [🎯 Use Cases](#-use-cases)
-- [📦 Quick Start](#-quick-start)
-- [📋 Feature Details](#-feature-details)
-- [☁️ Cloud Services (Pro)](#%EF%B8%8F-cloud-services-pro)
-- [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
-- [📁 Project Structure](#-project-structure)
-- [📖 Usage Guide](#-usage-guide)
-- [🔧 Build from Source](#-build-from-source)
-- [🧩 Extension Module System](#-extension-module-system)
-- [📢 Announcement Templates](#-announcement-templates)
-- [📜 Changelog](#-changelog)
-- [📬 Contact](#-contact)
-
-</details>
-
----
-
-## ✨ Key Features
+## ✨ 核心亮点
 
 <table>
 <tr>
 <td width="50%">
 
-### 🌐 Core Conversion
-| Feature | Description |
-|---------|-------------|
-| 🌐 Website to App | Wrap any URL into standalone app |
-| 🎬 Media to App | Images/videos to fullscreen apps |
-| 💻 HTML to App | React/Vue/Next.js support |
-| 📦 One-Click Build | No Android Studio needed |
+### 🌐 核心转换
+| 功能 | 说明 |
+|------|------|
+| 🌐 网站转App | 任意网址转独立应用 |
+| 🎬 媒体转App | 图片/视频转全屏应用 |
+| 💻 HTML转App | 支持 React/Vue/Next.js |
+| 📦 一键出包 | 无需 Android Studio |
 
 </td>
 <td width="50%">
 
-### 🤖 AI Powered
-| Feature | Description |
-|---------|-------------|
-| 🧩 Extension Modules | 10 built-in, 28 templates |
-| 🤖 AI Development | Natural language coding |
-| 🎨 AI Icon Generator | Generate beautiful icons |
-| 🎵 Music Search | Online BGM with lyrics |
+### 🤖 AI 驱动
+| 功能 | 说明 |
+|------|------|
+| 🧩 扩展模块 | 10个内置 + 28 模板 |
+| 🤖 AI 开发 | 自然语言编程 |
+| 🎨 AI 图标 | 智能生成精美图标 |
+| 🎵 音乐搜索 | 在线 BGM + 歌词同步 |
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🛡️ Security & Privacy
-| Feature | Description |
-|---------|-------------|
-| 🔐 APK Encryption | AES-256-GCM protection |
-| 🛡️ Browser Spoofing | UA & fingerprint spoofing |
-| 🚫 Hosts Blocking | Domain-level ad blocking |
-| 🌍 Isolated Environment | Multi-instance isolation |
+### 🛡️ 安全隐私
+| 功能 | 说明 |
+|------|------|
+| 🔐 APK 加密 | AES-256-GCM 保护 |
+| 🛡️ 浏览器伪装 | UA/指纹伪装 |
+| 🚫 Hosts 拦截 | 域名级广告拦截 |
+| 🌍 独立环境 | 多实例隔离 |
 
 </td>
 <td width="50%">
 
-### ✨ Extra Features
-| Feature | Description |
-|---------|-------------|
-| 🖼️ Media Gallery | Built-in media manager |
-| 📱 APK Architecture | Multi-arch APK support |
-| 📋 Long Press Menu | Enhanced context menu |
-| 🌐 Browser Engine | Custom WebView kernel |
+### ✨ 更多功能
+| 功能 | 说明 |
+|------|------|
+| 🖼️ 媒体画廊 | 内置媒体管理器 |
+| 📱 APK 架构 | 多架构支持 |
+| 📋 长按菜单 | 增强上下文菜单 |
+| 🌐 浏览器内核 | 自定义内核配置 |
 
 </td>
 </tr>
 <tr>
 <td colspan="2">
 
-### ☁️ Cloud Services (Pro/Ultra)
-| Feature | Description |
-|---------|-------------|
-| ☁️ Cloud Projects | Activation codes, announcements, version updates, remote config |
-| 📤 APK Share Pages | Beautiful download pages with GitHub/Gitee dual links |
-| 📊 Analytics Dashboard | Installs, active users, device/country/version distribution |
-| 🔗 Webhooks | Event-driven callbacks with HMAC signature verification |
-| 💾 Cloud Backup | Backup projects to GitHub/Gitee repositories |
-| 📦 Dual Distribution | Publish APKs to GitHub Releases + Gitee Releases |
+### ☁️ 云服务 (Pro/Ultra)
+| 功能 | 说明 |
+|------|------|
+| ☁️ 云项目 | 激活码、公告、版本更新、远程配置 |
+| 📤 APK 分享页 | 精美下载页，支持 GitHub/Gitee 双链接 |
+| 📊 数据分析 | 安装量、活跃用户、设备/地区/版本分布 |
+| 🔗 Webhook | 事件驱动回调，HMAC 签名验证 |
+| 💾 云备份 | 项目备份到 GitHub/Gitee 仓库 |
+| 📦 双平台分发 | 同时发布到 GitHub Releases 和 Gitee Releases |
 
-> 💡 **100% open source & free locally.** Cloud services are optional paid features that cover server costs.
+> 💡 **100% 开源免费。** 云服务是可选的付费功能，用于覆盖服务器成本。
 
 </td>
 </tr>
 </table>
 
-## 📸 Screenshots
+## 📸 应用截图
 
 <div align="center">
 <p>
-  <img src="png/1.png" width="180" alt="Home">
-  <img src="png/2.png" width="180" alt="Create App">
-  <img src="png/3.png" width="180" alt="App Settings">
-  <img src="png/4.png" width="180" alt="Extension Modules">
+  <img src="png/1.png" width="180" alt="首页">
+  <img src="png/2.png" width="180" alt="创建应用">
+  <img src="png/3.png" width="180" alt="应用设置">
+  <img src="png/4.png" width="180" alt="扩展模块">
 </p>
 <p>
-  <img src="png/5.png" width="180" alt="AI Features">
-  <img src="png/6.png" width="180" alt="Build APK">
-  <img src="png/7.png" width="180" alt="Theme">
-  <img src="png/8.png" width="180" alt="Settings">
+  <img src="png/5.png" width="180" alt="AI 功能">
+  <img src="png/6.png" width="180" alt="构建 APK">
+  <img src="png/7.png" width="180" alt="主题">
+  <img src="png/8.png" width="180" alt="设置">
 </p>
 <p>
-  <img src="png/9.png" width="180" alt="Preview">
-  <img src="png/10.png" width="180" alt="More Features">
+  <img src="png/9.png" width="180" alt="预览">
+  <img src="png/10.png" width="180" alt="更多功能">
 </p>
 </div>
 
 ---
 
-## 🎯 Use Cases
+## 🎯 适用场景
 
 <table>
 <tr>
 <td>
 
-| 📱 Personal | 🏢 Business |
+| 📱 个人用户 | 🏢 企业用户 |
 |------------|------------|
-| Quick website access | Enterprise internal systems |
-| Media showcase apps | Product demo apps |
-| Web enhancement tools | Kiosk mode displays |
-| Privacy protection | Training apps |
+| 网站快捷访问 | 企业内部系统 |
+| 媒体展示应用 | 产品展示应用 |
+| 网页增强工具 | 展会/商场展示终端 |
+| 隐私保护应用 | 培训教育应用 |
 
 </td>
 <td>
 
-| 👨‍💻 Developer | 👨‍👩‍👧 Family |
-|-----------|----------|
-| Frontend project packaging | Kids learning apps |
-| H5 game packaging | Screen time control |
-| Web app testing | Educational apps |
-| Rapid prototyping | Safe browsing |
+| 👨‍💻 开发者 | 👨‍👩‍👧 家庭用户 |
+|-----------|------------|
+| 前端项目打包 | 儿童学习应用 |
+| H5游戏封装 | 屏幕时间控制 |
+| Web应用测试 | 在线教育应用 |
+| 快速原型开发 | 安全浏览环境 |
 
 </td>
 </tr>
 </table>
 
-## 📦 Quick Start
+## 📦 快速开始
 
 ```bash
-# 1️⃣ Clone the repository
+# 1️⃣ 克隆仓库
 git clone https://github.com/shiahonb777/web-to-app.git
 
-# 2️⃣ Open in Android Studio
-# 3️⃣ Build and run on your device
-# 4️⃣ Start converting websites to apps!
+# 2️⃣ 用 Android Studio 打开
+# 3️⃣ 构建并运行到设备
+# 4️⃣ 开始将网站转换为应用！
 ```
 
-> 💡 **Or download the APK directly from [Releases](https://github.com/shiahonb777/web-to-app/releases)**
+> 💡 **或者直接从 [Releases](https://github.com/shiahonb777/web-to-app/releases) 下载 APK**
 
 ---
 
-## 📋 Feature Details
+## 📋 功能特性
 
 <details>
-<summary><b>🌐 Core Features</b> (click to expand)</summary>
+<summary><b>🌐 核心功能</b>（点击展开）</summary>
 
-- **URL to App**: Enter any website URL to generate a standalone app
-- **Media to App**: Convert images/videos into independent apps
-- **HTML to App**: Convert HTML/CSS/JS projects into standalone apps
-- **Frontend Framework Support**: React, Vue, Next.js, Nuxt, Svelte one-click packaging
-- **Server-Side Apps**: Support Node.js, PHP, Python, Go, WordPress projects as standalone apps
-- **Gallery App**: Create gallery showcase apps from multiple images/videos
-- **Custom Icon**: Select from gallery or generate with AI
-- **Custom Name**: Customize the app display name
-- **Custom Package Name**: Support custom APK package name and version
+- **URL转App**：输入任意网址，一键生成独立应用
+- **媒体转App**：支持图片/视频转换为独立应用
+- **HTML转App**：支持 HTML/CSS/JS 项目转换为独立应用
+- **前端框架支持**：React、Vue、Next.js、Nuxt、Svelte 等项目一键打包
+- **服务端应用转App**：支持 Node.js、PHP、Python、Go、WordPress 项目转换为独立应用
+- **画廊应用**：批量图片/视频创建画廊展示应用
+- **自定义图标**：支持从相册选择或 AI 生成自定义应用图标
+- **自定义名称**：自定义应用显示名称
+- **自定义包名**：支持自定义 APK 包名和版本号
 
 </details>
 
 <details>
-<summary><b>🧩 Extension Module System</b></summary>
+<summary><b>🧩 扩展模块系统</b></summary>
 
-- **Tampermonkey-like Scripts**: Inject custom JavaScript/CSS into webpages
-- **10 Built-in Modules**: Video downloader, Bilibili/Douyin/Xiaohongshu video extractor, video enhancer, web analyzer, dark mode, privacy protection, content enhancer, element blocker
-- **28 Code Templates**: Quickly create common functionality modules
-- **Module Categories**: 23 categories (content filter, content enhance, style modifier, theme, function enhance, automation, navigation, data extract, data save, interaction, accessibility, media, video, image, audio, security, anti-tracking, social, shopping, reading, translate, developer tools, other)
-- **URL Match Rules**: Support wildcards and regex patterns
-- **Config System**: Modules support user-customizable settings
-- **Permission Declaration**: Fine-grained permission control
-- **Share Code**: One-click generate share code/QR code for easy module sharing
-- **Import/Export**: Support module file import and export
-- **Chrome Extension Support**: Import and run Chrome browser extensions with automatic desktop→mobile adaptation
-- **Userscript Support**: Import Greasemonkey/Tampermonkey userscripts
-
-</details>
-
-<details>
-<summary><b>🤖 AI Module Development Agent</b></summary>
-
-- **Natural Language Development**: Describe requirements in natural language, AI generates module code
-- **Syntax Check**: Automatic JavaScript/CSS syntax error detection
-- **Security Scan**: Detect XSS, eval, and other security issues
-- **Auto Fix**: AI automatically fixes detected errors
-- **Code Snippet Library**: Quick insert common code snippets
-- **Debug Test Pages**: Built-in test pages to verify module effects
+- **类油猴脚本**：向网页注入自定义 JavaScript/CSS 代码
+- **10个内置模块**：视频下载、B站/抖音/小红书视频提取、视频增强、网页分析、暗黑模式、隐私保护、内容增强、元素屏蔽
+- **28 代码模板**：快速创建常见功能模块
+- **模块分类**：23 种分类（内容过滤、内容增强、样式修改、主题、功能增强、自动化、导航、数据提取、数据保存、交互、无障碍、媒体、视频、图片、音频、安全、反追踪、社交、购物、阅读、翻译、开发调试、其他）
+- **URL 匹配规则**：支持通配符和正则表达式匹配
+- **配置项系统**：模块支持用户自定义配置
+- **权限声明**：细粒度权限控制
+- **分享码**：一键生成分享码/二维码，轻松分享模块
+- **导入导出**：支持模块文件导入导出
+- **Chrome 扩展兼容**：支持导入和运行 Chrome 浏览器扩展，自动桌面→移动端适配
+- **油猴脚本兼容**：支持导入 Greasemonkey/Tampermonkey 用户脚本
 
 </details>
 
 <details>
-<summary><b>🎨 AI Features</b></summary>
+<summary><b>🤖 AI 模块开发 Agent</b></summary>
 
-- **Multi-Provider Support**: Google Gemini, OpenAI, GLM, Volcano, MiniMax, OpenRouter, etc.
-- **AI HTML Coding**: AI-assisted HTML/CSS/JS code generation
-- **AI Icon Generator**: Generate app icons using AI
-- **Icon Library**: Collect and manage generated icons
-- **Session Management**: Multi-session, templates, style customization
-- **Live Preview**: Preview generated code in real-time
-- **AI Settings**: Unified API key and model management
-
-</details>
-
-<details>
-<summary><b>✨ Integrated Features</b></summary>
-
-- **Splash Screen**: Support image/video splash animations with built-in video trimmer
-- **Background Music**: Add BGM playlist with LRC lyrics sync
-- **Online Music Search**: Search and download music online for BGM with lyrics sync
-- **Activation Code**: Built-in activation with SHA-256 encrypted verification
-- **Announcements**: Display announcements on startup with link support
-- **Announcement Templates**: 10 beautiful templates (Xiaohongshu, gradient, glassmorphism, neon, etc.)
-- **Ad Blocking**: Built-in ad blocking engine to filter web ads and popups
-- **Hosts Blocking**: Custom hosts file for domain-level blocking and filtering
-- **Auto Web Translation**: Automatic webpage translation, supports CN/EN/JP/Arabic
-- **Browser Engine**: Support WebView and GeckoView (Firefox) dual-engine switching
-- **Browser Shields**: Tracker blocking, HTTPS auto-upgrade, cookie consent blocker, reader mode
-- **Browser Spoofing**: User-Agent and browser fingerprint spoofing
-- **Isolated Browser Environment**: Independent runtime for each app with fingerprint spoofing and multi-instance isolation
-- **Long Press Menu**: Enhanced long-press context menu with custom actions
-- **Background Running**: Keep running in background after exit, maintain task execution
-- **Forced Run Mode**: Scheduled forced run, block Home/Back keys, black tech features
-- **Auto Start**: Support boot auto-start and scheduled auto-start
-- **APK Encryption**: Config/code/media encryption, integrity check, anti-debug protection
-- **Ad Integration**: Reserved ad SDK interfaces (banner/interstitial/splash)
+- **自然语言开发**：用自然语言描述需求，AI 自动生成模块代码
+- **语法检查**：自动检查 JavaScript/CSS 语法错误
+- **安全扫描**：检测 XSS、eval 等安全问题
+- **自动修复**：AI 自动修复检测到的错误
+- **代码片段库**：常用代码片段快速插入
+- **调试测试页面**：内置测试页面验证模块效果
 
 </details>
 
 <details>
-<summary><b>📤 Export Options</b></summary>
+<summary><b>🎨 AI 功能</b></summary>
 
-- **Desktop Shortcut**: Create desktop icons, launch like native apps
-- **Build APK**: Generate standalone APK packages without Android Studio
-- **APK Architecture**: Select target CPU architectures (arm64-v8a, armeabi-v7a, x86, x86_64)
-- **Project Template**: Export complete Android Studio projects
-
-</details>
-
-<details>
-<summary><b>🛡️ APK Hardening</b></summary>
-
-- **Hardening Engine**: One-click APK hardening protection
-- **Anti-Reverse**: Prevent decompilation and reverse engineering
-- **Dex Protection**: Dex file encryption protection
-- **Code Obfuscation**: Code obfuscation processing
-- **Native Protection**: Native layer security protection
-- **Runtime Shield**: Anti-debugging, environment detection
-- **Integrity Check**: Anti-tampering integrity verification
+- **多供应商支持**：Google Gemini、OpenAI、智谱 GLM、火山引擎、MiniMax、OpenRouter 等
+- **AI HTML 编程**：AI 辅助生成和修改 HTML/CSS/JS 代码
+- **AI 图标生成**：使用 AI 生成应用图标
+- **图标库**：收藏和管理生成的图标
+- **会话管理**：支持多会话、模板选择、样式定制
+- **实时预览**：代码生成后可直接预览效果
+- **AI 设置**：统一管理 API 密钥和模型配置
 
 </details>
 
 <details>
-<summary><b>🎥 Media App Features</b></summary>
+<summary><b>✨ 集成功能</b></summary>
 
-- **Image to App**: Full-screen image display with fill screen option
-- **Video to App**: Video playback with loop, audio toggle, autoplay (supports large video streaming)
-- **Media Gallery**: Built-in gallery for managing and browsing images and videos
-- **Display Config**: Audio toggle, loop, autoplay, fill screen options
-- **Encryption Support**: Media files support encryption protection
-- **APK Export**: Media apps support standalone APK export
+- **启动画面**：支持图片/视频启动动画，内置视频裁剪器
+- **背景音乐**：支持为应用添加 BGM 播放列表，可配合歌词同步显示
+- **在线音乐搜索**：在线搜索下载音乐作为 BGM，支持歌词同步
+- **激活码验证**：内置激活码机制，支持 SHA-256 加密校验
+- **弹窗公告**：启动时显示公告信息，支持链接跳转
+- **公告模板**：10 种精美公告模板（小红书、渐变、毛玻璃、霓虹等）
+- **广告拦截**：内置广告拦截引擎，自动过滤网页广告和弹窗
+- **Hosts 拦截**：自定义 hosts 文件实现域名级别拦截和过滤
+- **网页自动翻译**：网页内容自动翻译，支持中/英/日/阿拉伯语
+- **浏览器内核**：支持 WebView 和 GeckoView (Firefox) 双内核切换
+- **浏览器防护**：追踪器拦截、HTTPS 自动升级、Cookie 弹窗拦截、阅读模式
+- **浏览器伪装**：User-Agent 和浏览器指纹伪装
+- **独立浏览器环境**：每个应用独立运行环境，支持指纹伪装、多开隔离
+- **长按菜单**：增强的长按上下文菜单，支持自定义操作
+- **后台运行**：退出应用后继续在后台运行，保持任务持续执行
+- **强制运行模式**：定时强制运行、屏蔽 Home/返回键、多种黑科技功能
+- **开机自启动**：支持开机自动启动和定时自动启动
+- **APK 加密保护**：配置/代码/媒体加密、完整性校验、反调试保护
+- **广告集成**：预留广告SDK接口（横幅/插屏/开屏）
 
 </details>
 
 <details>
-<summary><b>🎨 Theme System</b></summary>
+<summary><b>📤 导出功能</b></summary>
 
-- **Multiple Themes**: Beautiful built-in theme styles
-- **Dark Mode**: Follow system or manual toggle
-- **Animations**: Customizable animation effects and speed
-- **Particle Effects**: Some themes support particle backgrounds
+- **桌面快捷方式**：创建桌面图标，像原生App一样启动
+- **构建APK安装包**：直接生成独立APK并安装，无需Android Studio
+- **APK 架构选择**：支持选择目标 CPU 架构（arm64-v8a、armeabi-v7a、x86、x86_64）
+- **项目模板导出**：导出完整Android Studio项目，可自行编译APK
 
 </details>
 
 <details>
-<summary><b>⚡ App Modifier</b></summary>
+<summary><b>🛡️ APK 加固保护</b></summary>
 
-- **App Scanner**: Automatically scan all installed apps
-- **Icon/Name Modifier**: Freely modify any app's icon and name
-- **Clone Install**: Install modified apps with independent package names
-- **Shortcut Launch**: Create shortcuts with new icons to launch original apps
+- **加固引擎**：一键 APK 加固保护
+- **反逆向保护**：防止反编译和逆向分析
+- **Dex 保护**：Dex 文件加密保护
+- **代码混淆**：代码混淆处理
+- **Native 保护**：Native 层安全保护
+- **运行时防护**：运行时反调试、环境检测
+- **完整性校验**：防篡改完整性验证
+
+</details>
+
+<details>
+<summary><b>🎥 媒体应用功能</b></summary>
+
+- **图片转App**：选择图片生成全屏展示应用
+- **视频转App**：选择视频生成循环播放应用（支持大视频流式打包）
+- **媒体画廊**：内置媒体画廊，管理和浏览图片视频
+- **显示配置**：支持音频开关、循环播放、自动播放、铺满屏幕
+- **加密支持**：媒体文件支持加密保护
+- **APK打包**：媒体应用支持导出为独立APK
+
+</details>
+
+<details>
+<summary><b>🎨 主题系统</b></summary>
+
+- **多种主题**：内置多款精美主题风格
+- **深色模式**：支持跟随系统、手动切换
+- **动画效果**：可自定义动画开关和速度
+- **粒子特效**：部分主题支持粒子背景效果
+
+</details>
+
+<details>
+<summary><b>⚡ 应用修改器</b></summary>
+
+- **应用列表扫描**：自动获取设备上已安装的应用列表
+- **图标/名称修改**：自由修改任意应用的图标和显示名称
+- **克隆安装**：将修改后的应用作为新应用安装（独立包名）
+- **快捷方式启动**：创建使用新图标的快捷方式，启动原应用
 
 </details>
 
 ---
 
-## ☁️ Cloud Services (Pro)
+## ☁️ 云服务 (Pro)
 
-> **Philosophy**: WebToApp is 100% open source. All local features are free forever. Cloud services are optional paid features — you're paying for server resources, not for the app itself.
+> **理念**：WebToApp 100% 开源。所有本地功能永久免费。云服务是可选的付费功能——你付费购买的是服务器资源，而不是应用本身。
 
-### What Pro/Ultra Users Get
+### Pro/Ultra 用户享有
 
-Pro and Ultra subscriptions unlock **cloud-powered features** that require our server infrastructure:
+Pro 和 Ultra 订阅解锁**需要服务器基础设施的云服务功能**：
 
-| Feature | Pro | Ultra |
-|---------|:---:|:-----:|
-| **Cloud Projects** (activation codes, announcements, version updates, remote config) | Up to 10 | Up to 50 |
-| **APK Share Pages** — beautiful download landing pages with GitHub + Gitee dual links | ✅ | ✅ |
-| **Analytics Dashboard** — installs, active users, country/device/OS/version distribution | ✅ | ✅ |
-| **Webhooks** — event-driven callbacks (code activated, version published, daily report) with HMAC signing | ✅ | ✅ |
-| **Cloud Backup** — push project source to GitHub/Gitee repos | ✅ | ✅ |
-| **Dual APK Distribution** — publish to GitHub Releases + Gitee Releases simultaneously | ✅ | ✅ |
-| **Per-project activation codes** | 200 | 1,000 |
-| **Per-project active announcements** | 5 | 20 |
-| **Per-project retained versions** | 5 | 20 |
-| **Per-project remote config keys** | 10 | 50 |
-| **FCM Push Notifications** | — | ✅ |
+| 功能 | Pro | Ultra |
+|------|:---:|:-----:|
+| **云项目**（激活码、公告、版本更新、远程配置） | 最多 10 个 | 最多 50 个 |
+| **APK 分享页** — 精美下载落地页，GitHub + Gitee 双链接 | ✅ | ✅ |
+| **数据分析面板** — 安装量、活跃用户、地区/设备/系统/版本分布 | ✅ | ✅ |
+| **Webhook** — 事件驱动回调（激活码使用、版本发布、每日报告），HMAC 签名 | ✅ | ✅ |
+| **云备份** — 将项目源码推送到 GitHub/Gitee 仓库 | ✅ | ✅ |
+| **双平台 APK 分发** — 同时发布到 GitHub Releases + Gitee Releases | ✅ | ✅ |
+| **每项目激活码** | 200 | 1,000 |
+| **每项目活跃公告** | 5 | 20 |
+| **每项目保留版本** | 5 | 20 |
+| **每项目远程配置键** | 10 | 50 |
+| **FCM 推送通知** | — | ✅ |
 
-### SDK API for Built Apps
+### SDK API（内置于构建的 APP）
 
-Apps built with cloud projects automatically get:
+使用云项目构建的 APP 自动获得：
 
 ```
-GET  /sdk/{project_key}/check-update    → Over-the-air update check
-GET  /sdk/{project_key}/announcements   → Remote announcements
-GET  /sdk/{project_key}/config           → Remote configuration
-POST /sdk/{project_key}/verify-code      → Activation code verification
-POST /sdk/{project_key}/stats            → Usage analytics reporting
+GET  /sdk/{project_key}/check-update    → OTA 更新检查
+GET  /sdk/{project_key}/announcements   → 远程公告
+GET  /sdk/{project_key}/config           → 远程配置
+POST /sdk/{project_key}/verify-code      → 激活码验证
+POST /sdk/{project_key}/stats            → 使用统计上报
 ```
 
-All SDK endpoints are cached by Cloudflare CDN (5-min TTL) for global performance.
+所有 SDK 接口通过 Cloudflare CDN 缓存（5 分钟 TTL），全球快速响应。
 
-### Share Page
+### 分享页
 
-Every cloud project gets a public download page at:
+每个云项目自动生成公开下载页：
 ```
 https://api.shiaho.sbs/s/{project_key}
 ```
-Shows app info, changelog, and dual download buttons (GitHub international + Gitee China).
+展示应用信息、更新日志、GitHub（国际）+ Gitee（国内）双下载按钮。
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ 技术栈
 
 <div align="center">
 
-| Category | Technology |
-|:--------:|:-----------|
-| 📝 Language | Kotlin 1.9+ |
+| 分类 | 技术 |
+|:----:|:-----|
+| 📝 语言 | Kotlin 1.9+ |
 | 🎨 UI | Jetpack Compose + Material 3 |
-| 🏗️ Architecture | MVVM + Repository |
-| 🗄️ Database | Room + DataStore |
-| 🌐 Network | OkHttp |
-| 🖼️ Image | Coil |
-| 🌍 Browser Engine | WebView + GeckoView (Firefox) |
-| 🔐 Encryption | AES-256-GCM + PBKDF2 |
-| ✍️ Signing | apksig (v1/v2/v3) |
+| 🏗️ 架构 | MVVM + Repository |
+| 🗄️ 数据库 | Room + DataStore |
+| 🌐 网络 | OkHttp |
+| 🖼️ 图片 | Coil |
+| 🌍 浏览器内核 | WebView + GeckoView (Firefox) |
+| 🔐 加密 | AES-256-GCM + PBKDF2 |
+| ✍️ 签名 | apksig (v1/v2/v3) |
 | 🛡️ Native | CMake C++17 / NDK |
-| 📷 QR Code | ZXing |
-| 🌍 i18n | Dynamic Switching |
-| 📱 Min SDK | Android 6.0 (API 23) |
-| 🎯 Target SDK | Android 16 (API 36) |
+| 📷 二维码 | ZXing |
+| 🌍 多语言 | i18n 动态切换 |
+| 📱 最低版本 | Android 6.0 (API 23) |
+| 🎯 目标版本 | Android 16 (API 36) |
 
 </div>
 
-## 📁 Project Structure
+## 📁 项目结构
 
 ```
 app/src/main/java/com/webtoapp/
-├── WebToAppApplication.kt      # Application class
-├── core/                       # Core modules
-│   ├── activation/            # Activation code management
-│   ├── adblock/              # Ad blocking engine
-│   ├── ads/                  # Ad SDK integration
-│   ├── ai/                   # AI features
-│   │   ├── AiApiClient.kt   # Multi-provider AI API client
-│   │   ├── AiConfigManager.kt # API key/model config management
-│   │   ├── AiGenerationService.kt # AI image generation service
-│   │   └── htmlcoding/      # AI HTML coding Agent
-│   ├── announcement/         # Announcement management
-│   ├── apkbuilder/          # APK builder
-│   │   ├── ApkBuilder.kt    # Build core (streaming, encryption)
-│   │   ├── JarSigner.kt     # APK signing (apksig v1/v2/v3)
-│   │   ├── ApkTemplate.kt   # Config/template management
-│   │   ├── ArscEditor.kt    # ARSC resource editor
-│   │   ├── ArscRebuilder.kt # ARSC rebuilder
-│   │   ├── AxmlEditor.kt    # Binary XML editor
-│   │   ├── AxmlRebuilder.kt # XML rebuilder
-│   │   └── BuildLogger.kt   # Build logger
-│   ├── appmodifier/         # App modifier core
-│   ├── autostart/           # Boot auto-start/scheduled start
-│   ├── background/          # Background running service
-│   ├── backup/              # Data backup
-│   ├── bgm/                 # Background music
-│   │   ├── BgmPlayer.kt     # Player (lyrics sync)
-│   │   ├── OnlineMusicApi.kt # Online music search API
-│   │   └── OnlineMusicDownloader.kt # Music downloader
-│   ├── blacktech/           # Black tech features
-│   ├── crypto/              # Encryption system (14 files)
-│   │   ├── AssetEncryptor.kt # AES-256-GCM encryption
-│   │   ├── AssetDecryptor.kt # Runtime decryption
-│   │   ├── NativeCrypto.kt  # Native encryption
-│   │   └── RuntimeProtection.kt # Runtime protection
-│   ├── disguise/            # Browser spoofing (UA/fingerprint)
-│   ├── download/            # Dependency download engine
-│   ├── engine/              # Browser engine management
-│   │   ├── BrowserEngine.kt  # Browser engine interface
-│   │   ├── BrowserEngineCallback.kt # Engine callback
-│   │   ├── EngineManager.kt  # Engine manager
-│   │   ├── EngineType.kt     # Engine type enum
-│   │   ├── SystemWebViewEngine.kt # WebView engine
-│   │   ├── GeckoViewEngine.kt # GeckoView (Firefox) engine
-│   │   ├── download/         # Engine download
-│   │   │   ├── EngineFileManager.kt # Engine file management
-│   │   │   └── GeckoEngineDownloader.kt # GeckoView downloader
-│   │   └── shields/         # Browser shields
-│   │       ├── BrowserShields.kt # Shields controller
-│   │       ├── ShieldsConfig.kt # Shields config
-│   │       ├── ShieldsStats.kt # Shields statistics
-│   │       ├── TrackerBlocker.kt # Tracker blocking
-│   │       ├── HttpsUpgrader.kt  # HTTPS upgrader
-│   │       ├── GpcInjector.kt # GPC signal injection
-│   │       ├── CookieConsentBlocker.kt # Cookie consent blocker
-│   │       └── ReaderMode.kt # Reader mode
-│   ├── errorpage/           # Error pages
-│   ├── export/              # Project export
-│   ├── extension/           # Extension module system
-│   │   ├── ExtensionModule.kt # Module data model (23 categories/permissions/config)
-│   │   ├── ExtensionManager.kt # Module lifecycle management
-│   │   ├── BuiltInModules.kt # 10 built-in modules
-│   │   ├── BuiltInChromeExtensions.kt # Built-in Chrome extensions
-│   │   ├── ModuleTemplates.kt # 28 code templates
-│   │   ├── ModulePreset.kt   # Module presets
-│   │   ├── CodeSnippets.kt  # 21-category 200+ code snippets
-│   │   ├── ExtensionFileManager.kt # Extension file management
-│   │   ├── ExtensionPanelScript.kt # Extension panel script
-│   │   ├── ExtensionPanelBridge.kt # Panel bridge
-│   │   ├── ExtensionPopupManager.kt # Popup manager
-│   │   ├── ExtensionResourceInterceptor.kt # Resource interceptor
-│   │   ├── ExtensionStorageSync.kt # Storage sync
-│   │   ├── ChromeExtensionParser.kt # Chrome extension parser
-│   │   ├── ChromeExtensionPolyfill.kt # Chrome API polyfill
-│   │   ├── ChromeExtensionRuntime.kt # Chrome extension runtime
-│   │   ├── ChromeExtensionMobileCompat.kt # Desktop→mobile adaptation
-│   │   ├── DeclarativeNetRequestEngine.kt # Declarative net request engine
-│   │   ├── WebRequestBridge.kt # Web request bridge
-│   │   ├── GreasemonkeyBridge.kt # Greasemonkey script compat
-│   │   ├── UserScriptParser.kt # Userscript parser
-│   │   ├── UserScriptWindowScript.kt # Userscript window
-│   │   ├── AiModuleDeveloper.kt # AI module developer
-│   │   ├── QrCodeUtils.kt   # QR code utilities
-│   │   ├── DebugTestPages.kt # Debug test pages
-│   │   └── agent/           # AI Agent module development
-│   │       ├── ModuleAgentEngine.kt # Agent engine
-│   │       ├── EnhancedAgentEngine.kt # Enhanced agent
-│   │       ├── AgentContext.kt # Agent context
-│   │       ├── AgentTool.kt  # Agent tool definitions
-│   │       ├── AgentToolExecutor.kt # Tool executor
-│   │       └── AgentWorkingMemory.kt # Agent working memory
-│   ├── forcedrun/           # Forced run mode
-│   │   ├── ForcedRunManager.kt # Forced run manager
-│   │   ├── ForcedRunConfig.kt # Forced run config
-│   │   ├── ForcedRunHardwareController.kt # Hardware controller
-│   │   ├── ForcedRunAccessibilityService.kt # Accessibility service
-│   │   ├── ForcedRunGuardService.kt # Guard service
-│   │   └── ForcedRunPermissionHelper.kt # Permission helper
-│   ├── frontend/            # Frontend project handling
-│   │   ├── ProjectDetector.kt # React/Vue/Next.js detection
-│   │   ├── FrontendProjectBuilder.kt # Frontend project builder
-│   │   ├── FrontendProjectConfig.kt # Frontend project config
-│   │   └── SampleProjectManager.kt # Sample project management
-│   ├── golang/              # Go app runtime
-│   ├── hardening/           # APK hardening protection
-│   │   ├── AppHardeningEngine.kt # Hardening engine
-│   │   ├── AntiReverseEngine.kt  # Anti-reverse engineering
-│   │   ├── DexProtector.kt  # Dex protection
-│   │   ├── CodeObfuscator.kt # Code obfuscation
-│   │   ├── NativeProtector.kt # Native layer protection
-│   │   ├── EnvironmentDetector.kt # Environment detection
-│   │   └── RuntimeShield.kt # Runtime shield
-│   ├── i18n/                # Multi-language support (CN/EN/AR)
-│   ├── isolation/           # Isolated browser environment
-│   │   ├── IsolationManager.kt # Isolation manager
-│   │   ├── IsolationConfig.kt # Isolation config
-│   │   ├── IsolationScriptInjector.kt # Script injection
-│   │   └── FingerprintGenerator.kt # Fingerprint generator
-│   ├── linux/               # Linux environment one-click build
-│   ├── nodejs/              # Node.js app runtime
-│   ├── php/                 # PHP app runtime
-│   ├── port/                # Port management
-│   ├── python/              # Python app runtime
-│   ├── shell/               # Shell mode management
-│   ├── logging/             # Logging system
-│   │   └── AppLogger.kt     # Application logger
-│   ├── sample/              # Sample projects
-│   │   └── SampleProjectExtractor.kt # Sample project extractor
-│   ├── webview/             # WebView management
-│   │   ├── WebViewManager.kt # WebView core manager
-│   │   ├── LocalHttpServer.kt # Local HTTP server
-│   │   ├── LongPressHandler.kt # Long press menu handler
-│   │   ├── TranslateBridge.kt # Translation bridge
-│   │   ├── NativeBridge.kt  # Native capability bridge (28 APIs)
-│   │   └── DownloadBridge.kt # Download bridge
-│   └── wordpress/           # WordPress app runtime
-├── ui/                        # UI layer
-│   ├── MainActivity.kt      # Main Activity
-│   ├── gallery/             # Gallery player
-│   │   ├── GalleryPlayerActivity.kt # Gallery Activity
-│   │   └── GalleryPlayerScreen.kt # Gallery player screen
-│   ├── htmlpreview/         # HTML preview
-│   │   └── HtmlPreviewActivity.kt # HTML preview Activity
-│   ├── media/               # Media playback
-│   │   └── MediaAppActivity.kt # Media app Activity
-│   ├── navigation/          # Navigation
-│   │   └── AppNavigation.kt # App navigation graph
-│   ├── shell/               # Shell mode
-│   │   └── ShellActivity.kt # Shell Activity (standalone APK entry)
-│   ├── splash/              # Splash screen
-│   │   └── SplashLauncherActivity.kt # Splash screen Activity
+├── WebToAppApplication.kt      # Application类
+├── core/                       # 核心功能模块
+│   ├── activation/            # 激活码管理
+│   ├── adblock/              # 广告拦截引擎
+│   ├── ads/                  # 广告 SDK 集成
+│   ├── ai/                   # AI 功能
+│   │   ├── AiApiClient.kt   # 多供应商 AI API 客户端
+│   │   ├── AiConfigManager.kt # API 密钥/模型配置管理
+│   │   ├── AiGenerationService.kt # AI 图像生成服务
+│   │   └── htmlcoding/      # AI HTML 编程 Agent
+│   ├── announcement/         # 公告管理
+│   ├── apkbuilder/          # APK构建器
+│   │   ├── ApkBuilder.kt    # 构建核心（流式写入、加密）
+│   │   ├── JarSigner.kt     # APK签名（apksig v1/v2/v3）
+│   │   ├── ApkTemplate.kt   # 配置/模板管理
+│   │   ├── ArscEditor.kt    # ARSC 资源编辑
+│   │   ├── ArscRebuilder.kt # ARSC 重建
+│   │   ├── AxmlEditor.kt    # 二进制 XML 编辑
+│   │   ├── AxmlRebuilder.kt # XML 重建
+│   │   └── BuildLogger.kt   # 构建日志
+│   ├── appmodifier/         # 应用修改器核心
+│   ├── autostart/           # 开机自启动/定时启动
+│   ├── background/          # 后台运行服务
+│   ├── backup/              # 数据备份
+│   ├── bgm/                 # 背景音乐
+│   │   ├── BgmPlayer.kt     # 播放器（支持歌词同步）
+│   │   ├── OnlineMusicApi.kt # 在线音乐搜索 API
+│   │   └── OnlineMusicDownloader.kt # 音乐下载器
+│   ├── blacktech/           # 黑科技功能
+│   ├── crypto/              # 加密系统（14个文件）
+│   │   ├── AssetEncryptor.kt # AES-256-GCM 加密
+│   │   ├── AssetDecryptor.kt # 运行时解密
+│   │   ├── NativeCrypto.kt  # Native 加密
+│   │   └── RuntimeProtection.kt # 运行时保护
+│   ├── disguise/            # 浏览器伪装（UA/指纹）
+│   ├── download/            # 依赖下载引擎
+│   ├── engine/              # 浏览器内核管理
+│   │   ├── BrowserEngine.kt  # 浏览器引擎接口
+│   │   ├── BrowserEngineCallback.kt # 引擎回调
+│   │   ├── EngineManager.kt  # 内核管理器
+│   │   ├── EngineType.kt     # 引擎类型枚举
+│   │   ├── SystemWebViewEngine.kt # WebView 内核
+│   │   ├── GeckoViewEngine.kt # GeckoView (Firefox) 内核
+│   │   ├── download/         # 引擎下载
+│   │   │   ├── EngineFileManager.kt # 引擎文件管理
+│   │   │   └── GeckoEngineDownloader.kt # GeckoView 下载器
+│   │   └── shields/         # 浏览器防护
+│   │       ├── BrowserShields.kt # 防护总控
+│   │       ├── ShieldsConfig.kt # 防护配置
+│   │       ├── ShieldsStats.kt # 防护统计
+│   │       ├── TrackerBlocker.kt # 追踪器拦截
+│   │       ├── HttpsUpgrader.kt  # HTTPS 升级
+│   │       ├── GpcInjector.kt # GPC 信号注入
+│   │       ├── CookieConsentBlocker.kt # Cookie 弹窗拦截
+│   │       └── ReaderMode.kt # 阅读模式
+│   ├── errorpage/           # 错误页面
+│   ├── export/              # 项目导出
+│   ├── extension/           # 扩展模块系统
+│   │   ├── ExtensionModule.kt # 模块数据模型（23种分类/权限/配置）
+│   │   ├── ExtensionManager.kt # 模块生命周期管理
+│   │   ├── BuiltInModules.kt # 10个内置模块
+│   │   ├── BuiltInChromeExtensions.kt # 内置 Chrome 扩展
+│   │   ├── ModuleTemplates.kt # 28 代码模板
+│   │   ├── ModulePreset.kt   # 模块预设
+│   │   ├── CodeSnippets.kt  # 21分类 200+ 代码片段
+│   │   ├── ExtensionFileManager.kt # 扩展文件管理
+│   │   ├── ExtensionPanelScript.kt # 扩展面板脚本
+│   │   ├── ExtensionPanelBridge.kt # 面板桥接
+│   │   ├── ExtensionPopupManager.kt # 弹窗管理
+│   │   ├── ExtensionResourceInterceptor.kt # 资源拦截器
+│   │   ├── ExtensionStorageSync.kt # 存储同步
+│   │   ├── ChromeExtensionParser.kt # Chrome 扩展解析
+│   │   ├── ChromeExtensionPolyfill.kt # Chrome API 兼容层
+│   │   ├── ChromeExtensionRuntime.kt # Chrome 扩展运行时
+│   │   ├── ChromeExtensionMobileCompat.kt # 桌面→移动端适配
+│   │   ├── DeclarativeNetRequestEngine.kt # 声明式网络请求引擎
+│   │   ├── WebRequestBridge.kt # Web 请求桥接
+│   │   ├── GreasemonkeyBridge.kt # 油猴脚本兼容
+│   │   ├── UserScriptParser.kt # 用户脚本解析
+│   │   ├── UserScriptWindowScript.kt # 用户脚本窗口
+│   │   ├── AiModuleDeveloper.kt # AI 模块开发器
+│   │   ├── QrCodeUtils.kt   # 二维码工具
+│   │   ├── DebugTestPages.kt # 调试测试页面
+│   │   └── agent/           # AI Agent 模块开发
+│   │       ├── ModuleAgentEngine.kt # Agent 引擎
+│   │       ├── EnhancedAgentEngine.kt # 增强 Agent
+│   │       ├── AgentContext.kt # Agent 上下文
+│   │       ├── AgentTool.kt  # Agent 工具定义
+│   │       ├── AgentToolExecutor.kt # 工具执行器
+│   │       └── AgentWorkingMemory.kt # Agent 工作记忆
+│   ├── forcedrun/           # 强制运行模式
+│   │   ├── ForcedRunManager.kt # 强制运行管理器
+│   │   ├── ForcedRunConfig.kt # 强制运行配置
+│   │   ├── ForcedRunHardwareController.kt # 硬件控制
+│   │   ├── ForcedRunAccessibilityService.kt # 无障碍服务
+│   │   ├── ForcedRunGuardService.kt # 守护服务
+│   │   └── ForcedRunPermissionHelper.kt # 权限辅助
+│   ├── frontend/            # 前端项目处理
+│   │   ├── ProjectDetector.kt # React/Vue/Next.js 检测
+│   │   ├── FrontendProjectBuilder.kt # 前端项目构建
+│   │   ├── FrontendProjectConfig.kt # 前端项目配置
+│   │   └── SampleProjectManager.kt # 示例项目管理
+│   ├── golang/              # Go 应用运行时
+│   ├── hardening/           # APK 加固保护
+│   │   ├── AppHardeningEngine.kt # 加固引擎
+│   │   ├── AntiReverseEngine.kt  # 反逆向
+│   │   ├── DexProtector.kt  # Dex 保护
+│   │   ├── CodeObfuscator.kt # 代码混淆
+│   │   ├── NativeProtector.kt # 原生层保护
+│   │   ├── EnvironmentDetector.kt # 环境检测
+│   │   └── RuntimeShield.kt # 运行时防护
+│   ├── i18n/                # 多语言支持（中/英/阿拉伯语）
+│   ├── isolation/           # 独立浏览器环境
+│   │   ├── IsolationManager.kt # 隔离管理器
+│   │   ├── IsolationConfig.kt # 隔离配置
+│   │   ├── IsolationScriptInjector.kt # 脚本注入
+│   │   └── FingerprintGenerator.kt # 指纹生成器
+│   ├── linux/               # Linux 环境一键构建
+│   ├── nodejs/              # Node.js 应用运行时
+│   ├── php/                 # PHP 应用运行时
+│   ├── port/                # 端口管理
+│   ├── python/              # Python 应用运行时
+│   ├── shell/               # Shell模式管理
+│   ├── logging/             # 日志系统
+│   │   └── AppLogger.kt     # 应用日志
+│   ├── sample/              # 示例项目
+│   │   └── SampleProjectExtractor.kt # 示例项目提取
+│   ├── webview/             # WebView管理
+│   │   ├── WebViewManager.kt # WebView 核心管理器
+│   │   ├── LocalHttpServer.kt # 本地 HTTP 服务器
+│   │   ├── LongPressHandler.kt # 长按菜单处理
+│   │   ├── TranslateBridge.kt # 翻译桥接
+│   │   ├── NativeBridge.kt  # 原生能力桥接（28 API）
+│   │   └── DownloadBridge.kt # 下载桥接
+│   └── wordpress/           # WordPress 应用运行时
+├── ui/                        # UI层
+│   ├── MainActivity.kt      # 主Activity
+│   ├── gallery/             # 画廊播放器
+│   │   ├── GalleryPlayerActivity.kt # 画廊 Activity
+│   │   └── GalleryPlayerScreen.kt # 画廊播放界面
+│   ├── htmlpreview/         # HTML 预览
+│   │   └── HtmlPreviewActivity.kt # HTML 预览 Activity
+│   ├── media/               # 媒体播放
+│   │   └── MediaAppActivity.kt # 媒体应用 Activity
+│   ├── navigation/          # 导航
+│   │   └── AppNavigation.kt # 应用导航图
+│   ├── shell/               # Shell 模式
+│   │   └── ShellActivity.kt # Shell Activity（独立 APK 入口）
+│   ├── splash/              # 启动画面
+│   │   └── SplashLauncherActivity.kt # 启动画面 Activity
 │   ├── viewmodel/           # ViewModel
-│   │   ├── MainViewModel.kt # Main ViewModel
-│   │   └── AiModuleDeveloperViewModel.kt # AI module dev ViewModel
-│   ├── webview/             # WebView container
+│   │   ├── MainViewModel.kt # 主 ViewModel
+│   │   └── AiModuleDeveloperViewModel.kt # AI 模块开发 ViewModel
+│   ├── webview/             # WebView 容器
 │   │   └── WebViewActivity.kt # WebView Activity
-│   ├── screens/             # Screens
-│   │   ├── HomeScreen.kt    # Home (app list)
-│   │   ├── CreateAppScreen.kt # Create website app
-│   │   ├── CreateMediaAppScreen.kt # Create media app
-│   │   ├── CreateHtmlAppScreen.kt # Create HTML app
-│   │   ├── CreateFrontendAppScreen.kt # Create frontend framework app
-│   │   ├── CreateGalleryAppScreen.kt # Create gallery app
-│   │   ├── CreateNodeJsAppScreen.kt # Create Node.js app
-│   │   ├── CreatePhpAppScreen.kt # Create PHP app
-│   │   ├── CreatePythonAppScreen.kt # Create Python app
-│   │   ├── CreateGoAppScreen.kt # Create Go app
-│   │   ├── CreateWordPressAppScreen.kt # Create WordPress app
-│   │   ├── ExtensionModuleScreen.kt # Extension modules
-│   │   ├── ModuleEditorScreen.kt # Module editor
-│   │   ├── AiModuleDeveloperScreen.kt # AI module dev
-│   │   ├── AiCodingScreen.kt # AI coding assistant
-│   │   ├── HtmlCodingScreen.kt # AI HTML coding
-│   │   ├── AiSettingsScreen.kt # AI settings
-│   │   ├── BrowserKernelScreen.kt # Browser engine management
-│   │   ├── HostsAdBlockScreen.kt # Hosts ad blocking
-│   │   ├── ThemeSettingsScreen.kt # Theme settings
-│   │   ├── LinuxEnvironmentScreen.kt # Linux environment
-│   │   ├── RuntimeDepsScreen.kt # Runtime dependency management
-│   │   ├── PortManagerScreen.kt # Port management
-│   │   ├── AppModifierScreen.kt # App modifier
-│   │   ├── WordPressSettingsScreen.kt # WordPress settings
-│   │   ├── AboutScreen.kt   # About/changelog
-│   │   └── aimodule/        # AI module dev (refactored)
+│   ├── screens/             # 页面
+│   │   ├── HomeScreen.kt    # 主页（应用列表）
+│   │   ├── CreateAppScreen.kt # 创建网站应用
+│   │   ├── CreateMediaAppScreen.kt # 创建媒体应用
+│   │   ├── CreateHtmlAppScreen.kt # 创建HTML应用
+│   │   ├── CreateFrontendAppScreen.kt # 创建前端框架应用
+│   │   ├── CreateGalleryAppScreen.kt # 创建画廊应用
+│   │   ├── CreateNodeJsAppScreen.kt # 创建 Node.js 应用
+│   │   ├── CreatePhpAppScreen.kt # 创建 PHP 应用
+│   │   ├── CreatePythonAppScreen.kt # 创建 Python 应用
+│   │   ├── CreateGoAppScreen.kt # 创建 Go 应用
+│   │   ├── CreateWordPressAppScreen.kt # 创建 WordPress 应用
+│   │   ├── ExtensionModuleScreen.kt # 扩展模块管理
+│   │   ├── ModuleEditorScreen.kt # 模块编辑器
+│   │   ├── AiModuleDeveloperScreen.kt # AI模块开发
+│   │   ├── AiCodingScreen.kt # AI 编程助手
+│   │   ├── HtmlCodingScreen.kt # AI HTML编程
+│   │   ├── AiSettingsScreen.kt # AI 设置
+│   │   ├── BrowserKernelScreen.kt # 浏览器内核管理
+│   │   ├── HostsAdBlockScreen.kt # Hosts 拦截管理
+│   │   ├── ThemeSettingsScreen.kt # 主题设置
+│   │   ├── LinuxEnvironmentScreen.kt # Linux 环境管理
+│   │   ├── RuntimeDepsScreen.kt # 运行时依赖管理
+│   │   ├── PortManagerScreen.kt # 端口管理
+│   │   ├── AppModifierScreen.kt # 应用修改器
+│   │   ├── WordPressSettingsScreen.kt # WordPress 设置
+│   │   ├── AboutScreen.kt   # 关于作者/更新日志
+│   │   └── aimodule/        # AI 模块开发（重构版）
 │   │       ├── AiModuleDeveloperScreenRefactored.kt
 │   │       ├── AiModuleDeveloperUiState.kt
 │   │       └── AiModuleDeveloperViewModel.kt
-│   ├── components/          # Reusable components (38 files)
-│   │   ├── announcement/    # Announcement templates
-│   │   │   ├── AnnouncementTemplates.kt # 10 announcement templates
-│   │   │   └── AnnouncementTemplateSelector.kt # Template selector
-│   │   ├── aimodule/        # AI module dev components
-│   │   │   ├── CodePreviewPanel.kt # Code preview
-│   │   │   ├── ErrorCard.kt # Error card
-│   │   │   ├── ModelSelector.kt # Model selector
-│   │   │   ├── StreamingMessageBubble.kt # Streaming message
-│   │   │   ├── ThinkingBlock.kt # Thinking block
-│   │   │   └── ToolCallCard.kt # Tool call card
-│   │   ├── htmlcoding/      # HTML coding components
+│   ├── components/          # 可复用组件（38个文件）
+│   │   ├── announcement/    # 公告模板
+│   │   │   ├── AnnouncementTemplates.kt # 10种公告模板
+│   │   │   └── AnnouncementTemplateSelector.kt # 模板选择器
+│   │   ├── aimodule/        # AI 模块开发组件
+│   │   │   ├── CodePreviewPanel.kt # 代码预览
+│   │   │   ├── ErrorCard.kt # 错误卡片
+│   │   │   ├── ModelSelector.kt # 模型选择器
+│   │   │   ├── StreamingMessageBubble.kt # 流式消息
+│   │   │   ├── ThinkingBlock.kt # 思考块
+│   │   │   └── ToolCallCard.kt # 工具调用卡片
+│   │   ├── htmlcoding/      # HTML 编程组件
 │   │   │   └── HtmlCodingComponents.kt
-│   │   ├── IconGeneratorDialog.kt # AI icon generator
-│   │   ├── IconPickerWithLibrary.kt # Icon picker
-│   │   ├── IconLibraryDialog.kt # Icon library
-│   │   ├── BgmCard.kt       # BGM config card
-│   │   ├── BgmSelector.kt   # BGM selector/online search
-│   │   ├── VideoTrimmer.kt  # Video trimmer
-│   │   ├── EncryptionConfigCard.kt # Encryption config
-│   │   ├── HardeningConfigCard.kt # APK hardening config
-│   │   ├── IsolationConfigCard.kt # Isolation config
-│   │   ├── DisguiseConfigCard.kt # Browser spoofing config
-│   │   ├── BackgroundRunConfigCard.kt # Background run config
-│   │   ├── ForcedRunConfigCard.kt # Forced run config
-│   │   ├── ForcedRunCountdownOverlay.kt # Forced run countdown
-│   │   ├── BlackTechConfigCard.kt # Black tech config
-│   │   ├── AutoStartCard.kt # Auto start config
-│   │   ├── ActivationCodeCard.kt # Activation code config
-│   │   ├── EnhancedActivationDialog.kt # Enhanced activation dialog
-│   │   ├── DataBackupCard.kt # Data backup card
-│   │   ├── StatusBarConfigCard.kt # Status bar config
-│   │   ├── StatusBarBackground.kt # Status bar background
-│   │   ├── StatusBarImageCropper.kt # Status bar image cropper
-│   │   ├── ExtensionModuleCard.kt # Extension module card
-│   │   ├── ExtensionModuleSelector.kt # Module selector
-│   │   ├── CodeSnippetSelector.kt # Code snippet selector
-│   │   ├── SampleProjectCard.kt # Sample project card
-│   │   ├── TypedSampleProjectCard.kt # Typed sample card
-│   │   ├── LongPressMenu.kt # Long press menu component
-│   │   ├── QrCodeShareDialog.kt # QR code sharing
-│   │   ├── AppNameTextField.kt # App name input
-│   │   ├── CategoryComponents.kt # Category components
-│   │   ├── ColorPickerDialog.kt # Color picker
-│   │   ├── CommonUIComponents.kt # Common UI components
-│   │   ├── EnhancedElevatedCard.kt # Enhanced card
-│   │   ├── ThemedComponents.kt # Themed components
-│   │   ├── LanguageSelector.kt # Language selector
-│   │   ├── LrcEditorDialog.kt # LRC lyrics editor
-│   │   └── ManualLrcAligner.kt # Manual lyrics aligner
-│   ├── data/                # Data layer
-│   │   ├── model/           # Data models
-│   │   │   ├── WebApp.kt    # App entity (11 AppTypes)
-│   │   │   ├── AppCategory.kt # App category
-│   │   │   └── AiConfig.kt  # AI config
+│   │   ├── IconGeneratorDialog.kt # AI图标生成
+│   │   ├── IconPickerWithLibrary.kt # 图标选择器
+│   │   ├── IconLibraryDialog.kt # 图标库
+│   │   ├── BgmCard.kt       # BGM 配置卡片
+│   │   ├── BgmSelector.kt   # BGM 选择/在线搜索
+│   │   ├── VideoTrimmer.kt  # 视频裁剪器
+│   │   ├── EncryptionConfigCard.kt # 加密配置
+│   │   ├── HardeningConfigCard.kt # APK 加固配置
+│   │   ├── IsolationConfigCard.kt # 独立环境配置
+│   │   ├── DisguiseConfigCard.kt # 浏览器伪装配置
+│   │   ├── BackgroundRunConfigCard.kt # 后台运行配置
+│   │   ├── ForcedRunConfigCard.kt # 强制运行配置
+│   │   ├── ForcedRunCountdownOverlay.kt # 强制运行倒计时
+│   │   ├── BlackTechConfigCard.kt # 黑科技配置
+│   │   ├── AutoStartCard.kt # 自启动配置
+│   │   ├── ActivationCodeCard.kt # 激活码配置
+│   │   ├── EnhancedActivationDialog.kt # 增强激活对话框
+│   │   ├── DataBackupCard.kt # 数据备份卡片
+│   │   ├── StatusBarConfigCard.kt # 状态栏配置
+│   │   ├── StatusBarBackground.kt # 状态栏背景
+│   │   ├── StatusBarImageCropper.kt # 状态栏图片裁剪
+│   │   ├── ExtensionModuleCard.kt # 扩展模块卡片
+│   │   ├── ExtensionModuleSelector.kt # 模块选择器
+│   │   ├── CodeSnippetSelector.kt # 代码片段选择器
+│   │   ├── SampleProjectCard.kt # 示例项目卡片
+│   │   ├── TypedSampleProjectCard.kt # 类型化示例卡片
+│   │   ├── LongPressMenu.kt # 长按菜单组件
+│   │   ├── QrCodeShareDialog.kt # 二维码分享
+│   │   ├── AppNameTextField.kt # 应用名输入
+│   │   ├── CategoryComponents.kt # 分类组件
+│   │   ├── ColorPickerDialog.kt # 颜色选择器
+│   │   ├── CommonUIComponents.kt # 通用 UI 组件
+│   │   ├── EnhancedElevatedCard.kt # 增强卡片
+│   │   ├── ThemedComponents.kt # 主题化组件
+│   │   ├── LanguageSelector.kt # 语言选择器
+│   │   ├── LrcEditorDialog.kt # LRC 歌词编辑
+│   │   └── ManualLrcAligner.kt # 手动歌词对齐
+│   ├── data/                # 数据层
+│   │   ├── model/           # 数据模型
+│   │   │   ├── WebApp.kt    # 应用实体（11种 AppType）
+│   │   │   ├── AppCategory.kt # 应用分类
+│   │   │   └── AiConfig.kt  # AI 配置
 │   │   ├── dao/             # DAO
-│   │   │   ├── WebAppDao.kt # App DAO
-│   │   │   └── AppCategoryDao.kt # Category DAO
-│   │   ├── database/        # Database
-│   │   │   └── AppDatabase.kt # Room database
-│   │   ├── repository/      # Repository
-│   │   │   ├── WebAppRepository.kt # App repository
-│   │   │   └── AppCategoryRepository.kt # Category repository
-│   │   └── converter/       # Type converters
+│   │   │   ├── WebAppDao.kt # 应用 DAO
+│   │   │   └── AppCategoryDao.kt # 分类 DAO
+│   │   ├── database/        # 数据库
+│   │   │   └── AppDatabase.kt # Room 数据库
+│   │   ├── repository/      # 仓库
+│   │   │   ├── WebAppRepository.kt # 应用仓库
+│   │   │   └── AppCategoryRepository.kt # 分类仓库
+│   │   └── converter/       # 类型转换器
 │   │       └── Converters.kt # Room TypeConverter
-│   └── theme/               # Theme system
-│       ├── Theme.kt         # Theme definition
-│       ├── AppThemes.kt     # App theme collection
-│       ├── ThemeAnimations.kt # Theme animations
-│       └── ThemeManager.kt  # Theme manager
-└── util/                      # Utilities (21 files)
-    ├── Extensions.kt        # Kotlin extensions
-    ├── HtmlProjectProcessor.kt # HTML project processing
-    ├── ZipProjectImporter.kt # ZIP project import
-    ├── MediaSaver.kt        # Media saving
-    ├── MediaStorage.kt      # Media storage
-    ├── FaviconFetcher.kt    # Favicon fetcher
-    ├── IconStorage.kt       # Icon storage
-    ├── IconLibraryStorage.kt # Icon library storage
-    ├── CacheManager.kt      # Cache management
-    ├── DownloadHelper.kt    # Download helper
-    ├── DownloadNotificationManager.kt # Download notifications
-    ├── AppUpdateChecker.kt  # App update checker
-    ├── OfflineManager.kt    # Offline management
-    ├── GsonProvider.kt      # Gson provider
-    ├── UrlSafety.kt         # URL safety check
-    ├── BgmStorage.kt        # BGM storage
-    ├── HtmlStorage.kt       # HTML storage
-    ├── SplashStorage.kt     # Splash screen storage
-    ├── ProcessCompat.kt     # Process compat
-    ├── ThreadLocalCompat.kt # ThreadLocal compat
-    └── TvUtils.kt           # TV adaptation utilities
+│   └── theme/               # 主题系统
+│       ├── Theme.kt         # 主题定义
+│       ├── AppThemes.kt     # 应用主题集
+│       ├── ThemeAnimations.kt # 主题动画
+│       └── ThemeManager.kt  # 主题管理器
+└── util/                      # 工具类（21个文件）
+    ├── Extensions.kt        # Kotlin 扩展函数
+    ├── HtmlProjectProcessor.kt # HTML 项目处理
+    ├── ZipProjectImporter.kt # ZIP 项目导入
+    ├── MediaSaver.kt        # 媒体保存
+    ├── MediaStorage.kt      # 媒体存储
+    ├── FaviconFetcher.kt    # 网站图标获取
+    ├── IconStorage.kt       # 图标存储
+    ├── IconLibraryStorage.kt # 图标库存储
+    ├── CacheManager.kt      # 缓存管理
+    ├── DownloadHelper.kt    # 下载辅助
+    ├── DownloadNotificationManager.kt # 下载通知
+    ├── AppUpdateChecker.kt  # 应用更新检查
+    ├── OfflineManager.kt    # 离线管理
+    ├── GsonProvider.kt      # Gson 提供者
+    ├── UrlSafety.kt         # URL 安全检查
+    ├── BgmStorage.kt        # BGM 存储
+    ├── HtmlStorage.kt       # HTML 存储
+    ├── SplashStorage.kt     # 启动画面存储
+    ├── ProcessCompat.kt     # 进程兼容
+    ├── ThreadLocalCompat.kt # ThreadLocal 兼容
+    └── TvUtils.kt           # TV 适配工具
 ```
 
-## 📖 Usage Guide
+## 📖 使用说明
 
-### Create Website App
-1. Click "Create App" button on home screen
-2. Enter app name and website URL
-3. (Optional) Select custom icon or generate with AI
-4. (Optional) Configure splash screen, BGM, activation code, announcement, ad blocking, etc.
-5. (Optional) Select extension modules to enhance functionality
-6. Click Save
+### 创建网站应用
+1. 点击主页的 "创建应用" 按钮
+2. 填写应用名称和网站地址
+3. （可选）选择自定义图标或使用 AI 生成
+4. （可选）配置启动画面、背景音乐、激活码、公告、广告拦截等
+5. （可选）选择扩展模块增强功能
+6. 点击保存
 
-### Create Media App
-1. Click "Create Media App" button
-2. Select image or video file
-3. Configure display options (loop, autoplay, audio toggle, etc.)
-4. (Optional) Add background music
-5. Save and build APK
+### 创建媒体应用
+1. 点击 "创建媒体应用" 按钮
+2. 选择图片或视频文件
+3. 配置显示选项（循环播放、自动播放、音频开关等）
+4. （可选）添加背景音乐
+5. 保存并构建 APK
 
-### Create HTML App
-1. Click "Create HTML App" button
-2. Select HTML project folder or single file
-3. Set entry file (default index.html)
-4. Supports React/Vue/Next.js build outputs
-5. Save and build APK
+### 创建 HTML 应用
+1. 点击 "创建 HTML 应用" 按钮
+2. 选择 HTML 项目文件夹或单个文件
+3. 设置入口文件（默认 index.html）
+4. 支持 React/Vue/Next.js 等构建产物
+5. 保存并构建 APK
 
-### Use Extension Modules
-1. When creating/editing an app, expand the "Extension Modules" card
-2. Click "Select Modules" to browse 10 built-in modules
-3. Select desired modules (video download, dark mode, privacy protection, etc.)
-4. Modules will automatically inject and execute when the app runs
+### 使用扩展模块
+1. 在创建/编辑应用时，展开"扩展模块"卡片
+2. 点击"选择模块"浏览 10 个内置模块
+3. 选择需要的模块（视频下载、深色模式、隐私保护等）
+4. 模块会在应用运行时自动注入执行
 
-### AI-Assisted Development
-1. Go to "Extension Modules" > "AI Module Development"
-2. Describe the functionality you want in natural language
-3. AI generates module code with syntax check and security scan
-4. Preview the effect and save
+### AI 辅助开发
+1. 进入"扩展模块" > "AI 模块开发"
+2. 用自然语言描述你想要的功能
+3. AI 自动生成模块代码并进行语法检查和安全扫描
+4. 预览效果并保存
 
-### Run an App
-- Click app card to preview directly
-- Long press or click menu for more options
+### 运行应用
+- 点击应用卡片直接预览运行
+- 长按或点击菜单可进行更多操作
 
-### Build APK Package
-1. Click app card menu > "Build APK"
-2. Configure encryption options (optional)
-3. Configure isolated browser environment (optional)
-4. Configure background running (optional)
-5. Click "Start Build"
-6. Installation dialog appears automatically when complete
+### 构建 APK 安装包
+1. 点击应用卡片右侧菜单 > "构建 APK"
+2. 配置加密选项（可选）
+3. 配置独立浏览器环境（可选）
+4. 配置后台运行（可选）
+5. 点击 "开始构建"
+6. 构建完成后自动弹出安装界面
 
-### Configure Forced Run Mode
-1. When creating/editing an app, expand "Forced Run" card
-2. Enable forced run and select mode (fixed time/countdown/duration)
-3. Configure time period and active days
-4. Configure black tech features (optional)
-5. Build APK and app will force run at specified times
+### 配置强制运行模式
+1. 在创建/编辑应用时，展开"强制运行"卡片
+2. 启用强制运行并选择模式（固定时段/倒计时/限时）
+3. 配置时间段和生效日期
+4. 配置黑科技功能（可选）
+5. 构建 APK 后应用将在指定时间强制运行
 
-### Use App Modifier
-1. Click home menu > "App Modifier"
-2. Search or filter target app in the app list
-3. Click app to enter modification interface
-4. Select new icon, enter new name
-5. Choose operation:
-   - **Shortcut**: Create desktop shortcut with new icon
-   - **Clone Install**: Generate new APK and install as independent app
+### 使用应用修改器
+1. 点击主页右上角菜单 > "应用修改器"
+2. 在应用列表中搜索或筛选目标应用
+3. 点击应用进入修改界面
+4. 选择新图标、输入新名称
+5. 选择操作方式：
+   - **快捷方式**：创建使用新图标的桌面快捷方式
+   - **克隆安装**：生成新 APK 并安装为独立应用
 
-## 🔧 Build from Source
+## 编译说明
 
-### Requirements
-- Android Studio Hedgehog (2023.1.1) or later
+### 环境要求
+- Android Studio Hedgehog (2023.1.1) 或更高版本
 - JDK 17
 - Gradle 8.14+
 
-### Build Steps
+### 编译步骤
 ```bash
-# Clone the repository
-git clone https://github.com/shiahonb777/web-to-app.git
+# 克隆项目
+git clone <repository_url>
 
-# Enter project directory
-cd web-to-app
+# 进入项目目录
+cd 网站转app
 
-# Build Debug version
+# 编译Debug版本
 ./gradlew assembleDebug
 
-# Build Release version
+# 编译Release版本
 ./gradlew assembleRelease
 ```
 
-### Signing Configuration
-For Release builds, configure signing in `app/build.gradle.kts`:
+### 签名配置
+Release版本需要配置签名，在 `app/build.gradle.kts` 中添加：
 ```kotlin
 signingConfigs {
     create("release") {
@@ -789,67 +765,67 @@ signingConfigs {
 }
 ```
 
-## 🧩 Extension Module System
+## 扩展模块系统
 
-### Built-in Modules
-| Module | Function |
-|--------|----------|
-| ⬇️ Video Downloader | Auto-detect webpage videos, supports MP4 and Blob stream download |
-| 📺 Bilibili Video Extractor | Extract Bilibili highest quality video and audio stream URLs |
-| 🎬 Douyin Video Extractor | Extract Douyin watermark-free video URLs |
-| 📱 Xiaohongshu Video Extractor | Extract Xiaohongshu video playback URLs |
-| ⚡ Video Enhancer | Speed control (0.5x-5x), picture-in-picture, background play, block app redirect |
-| 🔧 Web Analyzer | Element inspector, network monitor, cookie manager, console injection |
-| 🌙 Advanced Dark Mode | Smart color inversion, image brightness control, scheduled toggle |
-| 🛡️ Privacy Protection | Ad blocking, anti-fingerprint tracking, click hijack protection, external link warning |
-| 📝 Content Enhancer | Force copy, selection translate, long screenshot, Markdown conversion |
-| 🚫 Element Blocker | Block ads, popups, and specified elements |
+### 内置模块
+| 模块 | 功能 |
+|------|------|
+| ⬇️ 视频下载器 | 自动检测网页视频，支持 MP4 和 Blob 流下载 |
+| 📺 B站视频提取 | 提取 B站最高画质视频和音频流地址 |
+| 🎬 抖音视频提取 | 提取抖音无水印视频地址 |
+| 📱 小红书视频提取 | 提取小红书视频播放地址 |
+| ⚡ 视频增强 | 倍速控制（0.5x-5x）、画中画、后台播放、阻止App跳转 |
+| 🔧 网页分析工具 | 元素审查、网络监控、Cookie管理、Console注入 |
+| 🌙 高级暗黑模式 | 智能色彩反转、图片亮度控制、定时开关 |
+| 🛡️ 隐私保护 | 去广告、反指纹追踪、点击劫持保护、外链警告 |
+| 📝 内容增强 | 强制复制、划词翻译、长截图、Markdown转化 |
+| 🚫 元素屏蔽 | 屏蔽网页广告、弹窗、指定元素 |
 
-### Module Categories (23)
-- Content Filter, Content Enhance, Style Modifier, Theme
-- Function Enhance, Automation, Navigation, Data Extract
-- Data Save, Interaction, Accessibility
-- Media, Video, Image, Audio
-- Security, Anti-Tracking, Social, Shopping
-- Reading, Translation, Developer Tools, Other
+### 模块分类（23种）
+- 内容过滤、内容增强、样式修改、主题美化
+- 功能增强、自动化、导航辅助、数据提取
+- 数据保存、交互、无障碍
+- 媒体处理、视频、图片、音频
+- 安全隐私、反追踪、社交增强、购物助手
+- 阅读模式、翻译工具、开发调试、其他
 
-### NativeBridge API (Native Capabilities)
-Extension modules can call Android native functions via `window.NativeBridge`:
+### NativeBridge API（原生能力）
+扩展模块可以通过 `window.NativeBridge` 调用 Android 原生功能：
 
-| API | Function |
-|-----|----------|
-| `showToast(msg, duration?)` | Show Toast notification |
-| `vibrate(ms?)` | Trigger vibration feedback |
-| `vibratePattern(pattern, repeat?)` | Pattern vibration |
-| `copyToClipboard(text)` | Copy to clipboard |
-| `getClipboardText()` | Read clipboard content |
-| `share(title, text, url?)` | System share dialog |
-| `shareImage(imageUrl, title?)` | Share image |
-| `openUrl(url)` | Open URL in browser |
-| `openApp(packageName)` | Open another app |
-| `saveImageToGallery(url, filename?)` | Save image to gallery |
-| `saveVideoToGallery(url, filename?)` | Save video to gallery |
-| `getDeviceInfo()` | Get device info (JSON) |
-| `getAppInfo()` | Get app info (JSON) |
-| `isNetworkAvailable()` | Check network status |
-| `getNetworkType()` | Get network type |
-| `saveToFile(content, filename, mimeType?)` | Save file |
-| `log(message)` | Output log |
-| `setOrientation(orientation)` | Set screen orientation |
-| `getOrientation()` | Get current orientation |
-| `lockOrientation()` | Lock screen orientation |
-| `unlockOrientation()` | Unlock screen orientation |
-| `downloadVideo(url, filename)` | Download video |
-| `downloadWithHeaders(url, filename, headersJson)` | Download with headers |
-| `setScreenBrightness(brightness)` | Set screen brightness |
-| `setKeepScreenOn(keepOn)` | Keep screen on |
-| `enterFullscreen()` | Enter fullscreen mode |
-| `exitFullscreen()` | Exit fullscreen mode |
-| `isFullscreen()` | Check fullscreen status |
+| API | 功能 |
+|-----|------|
+| `showToast(msg, duration?)` | 显示 Toast 提示 |
+| `vibrate(ms?)` | 触发震动反馈 |
+| `vibratePattern(pattern, repeat?)` | 模式震动 |
+| `copyToClipboard(text)` | 复制到剪贴板 |
+| `getClipboardText()` | 读取剪贴板内容 |
+| `share(title, text, url?)` | 调用系统分享 |
+| `shareImage(imageUrl, title?)` | 分享图片 |
+| `openUrl(url)` | 用浏览器打开链接 |
+| `openApp(packageName)` | 打开其他应用 |
+| `saveImageToGallery(url, filename?)` | 保存图片到相册 |
+| `saveVideoToGallery(url, filename?)` | 保存视频到相册 |
+| `getDeviceInfo()` | 获取设备信息（JSON） |
+| `getAppInfo()` | 获取应用信息（JSON） |
+| `isNetworkAvailable()` | 检查网络状态 |
+| `getNetworkType()` | 获取网络类型 |
+| `saveToFile(content, filename, mimeType?)` | 保存文件 |
+| `log(message)` | 输出日志 |
+| `setOrientation(orientation)` | 设置屏幕方向 |
+| `getOrientation()` | 获取当前屏幕方向 |
+| `lockOrientation()` | 锁定屏幕方向 |
+| `unlockOrientation()` | 解锁屏幕方向 |
+| `downloadVideo(url, filename)` | 下载视频 |
+| `downloadWithHeaders(url, filename, headersJson)` | 带 Headers 下载 |
+| `setScreenBrightness(brightness)` | 设置屏幕亮度 |
+| `setKeepScreenOn(keepOn)` | 保持屏幕常亮 |
+| `enterFullscreen()` | 进入全屏模式 |
+| `exitFullscreen()` | 退出全屏模式 |
+| `isFullscreen()` | 检查全屏状态 |
 
-### Module Development Example
+### 模块开发示例
 ```javascript
-// Example: Auto hide ads
+// 示例1：自动隐藏广告
 const selectors = getConfig('selectors', '.ad-banner').split('\n');
 function hideAds() {
     selectors.forEach(sel => {
@@ -860,344 +836,385 @@ function hideAds() {
 }
 hideAds();
 new MutationObserver(hideAds).observe(document.body, { childList: true, subtree: true });
+
+// 示例2：一键保存图片（使用 NativeBridge）
+document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        NativeBridge.saveImageToGallery(img.src);
+        NativeBridge.vibrate(50);
+        NativeBridge.showToast('图片已保存');
+    });
+});
+
+// 示例3：分享当前页面
+function shareCurrentPage() {
+    NativeBridge.share(document.title, '分享给你一个有趣的页面', location.href);
+}
 ```
 
-## 📢 Announcement Templates
+## 公告模板
 
-10 beautiful announcement popup templates:
-- **Minimal** - Clean and simple
-- **Xiaohongshu Style** - Lively and cute
-- **Gradient** - Modern and stylish
-- **Glassmorphism** - Transparent texture
-- **Neon** - Cool glowing effect
-- **Cute** - Pink and sweet
-- **Elegant** - Golden and noble
-- **Festive** - Celebratory and lively
-- **Dark** - Mysterious and deep
-- **Nature** - Fresh and green
+内置 10 种精美公告弹窗模板：
+- **极简风格** - 简洁大方
+- **小红书风格** - 活泼可爱
+- **渐变风格** - 现代时尚
+- **毛玻璃风格** - 通透质感
+- **霓虹风格** - 炫酷发光
+- **可爱风格** - 粉嫩甜美
+- **优雅风格** - 金色高贵
+- **节日风格** - 喜庆热闹
+- **暗黑风格** - 神秘深邃
+- **自然风格** - 清新绿色
 
-## 📝 Notes
+## 广告拦截规则
 
-1. Some websites may have anti-crawling mechanisms, loading may be limited
-2. Network permission required for normal use
-3. Exported projects need to be compiled with Android Studio on PC
-4. Activation codes support both local verification and cloud-based verification (Pro/Ultra)
-5. Extension modules execute in WebView, some sites may have CSP restrictions
-6. Cloud services require an active Pro/Ultra subscription; all local features remain free forever
+内置常见广告域名拦截，支持自定义规则：
+- 域名规则：`||example.com` 或直接输入域名
+- 通配符规则：`*ads*`、`*/banner/*`
 
-## 📜 License
+## 激活码机制
+
+- 支持批量设置多个激活码
+- 激活状态本地持久化
+- 支持SHA-256加密校验
+
+## 注意事项
+
+1. 部分网站可能有反爬虫机制，加载可能受限
+2. 需要网络权限才能正常使用
+3. 导出的项目需要在PC端用Android Studio编译
+4. 激活码支持本地验证和云端验证（Pro/Ultra）
+5. 扩展模块在 WebView 中执行，部分网站可能有 CSP 限制
+6. 云服务需要有效的 Pro/Ultra 订阅；所有本地功能永久免费
+
+## License
 
 MIT License
 
-## 📜 Changelog
+## 更新日志
 
 ### v1.9.5
-**New Features**
-- Cookies persistence feature
-- Multi API key management configuration
-- Model name search feature
-- Hide URL preview feature
-- Popup blocker feature
+**新功能**
+- 新增cookies持久化
+- 新增多apikey管理配置
+- 新增模型名称搜索功能
+- 新增隐藏URL预览功能
+- 新增弹窗拦截器功能
 
-**Improvements**
-- Optimized custom API endpoint adaptation
-- Optimized model name display
-- Optimized multi-language content adaptation
+**优化改进**
+- 优化自定义api端点适配
+- 优化模型名称显示
+- 优化部分内容的多语言适配
 
-**Bug Fixes**
-- Fixed gallery app build path issue
-- Fixed microphone permission issue
-- Fixed zoom property not working issue
-- Fixed activation code language display issue
-- Fixed frontend and gallery app filename display issue
-- Fixed core config edit for some app types not working
-- Fixed keyboard initialization issue
+**Bug 修复**
+- 修复画廊应用构建路径问题
+- 修复麦克风权限问题
+- 修复zoom属性不生效问题
+- 修复激活码语言显示问题
+- 修复前端应用和画廊应用显示文件名问题
+- 修复编辑核心配置功能部分应用类型失效问题
+- 修复键盘初始化问题
 
 ### v1.9.0
-**New Features**
-- Browser Engine: Support for custom WebView kernel configuration
-- Browser Spoofing: User-Agent and browser fingerprint spoofing
-- Hosts Blocking: Custom hosts file for domain-level blocking
-- Long Press Menu: Enhanced long-press context menu options
-- APK Architecture: Support for selecting target CPU architectures (arm64-v8a, armeabi-v7a, x86, x86_64)
-- Media Gallery: Built-in media gallery for managing images and videos
+**新功能**
+- 新增浏览器内核功能：支持自定义 WebView 内核配置
+- 新增浏览器伪装功能：User-Agent 和浏览器指纹伪装
+- 新增 Hosts 拦截功能：自定义 hosts 文件实现域名级别拦截
+- 新增长按菜单功能：增强的长按上下文菜单选项
+- 新增 APK 架构功能：支持选择目标 CPU 架构（arm64-v8a、armeabi-v7a、x86、x86_64）
+- 新增媒体画廊功能：内置媒体画廊管理图片和视频
 
-**Improvements**
-- Optimized extension module functionality
-- Improved English and Arabic translation support
-- Enhanced theme interactions and performance
-- Optimized API configuration testing
+**优化改进**
+- 优化扩展模块功能
+- 优化英文、阿拉伯语翻译支持
+- 强化主题交互与性能
+- 优化 API 配置测试
 
-**Bug Fixes**
-- Fixed app name displaying excessive spaces
-- Fixed popup announcement navigation issues
-- Fixed crash when calling external browser
-- Fixed download errors
-- Fixed crash when editing modules
-- Fixed AI image generation not working
-- Fixed downloader and player coordination issues
+**Bug 修复**
+- 修复应用名称大量空格问题
+- 修复弹窗公告跳转问题
+- 修复调用外部浏览器崩溃问题
+- 修复下载错误问题
+- 修复编辑模块时崩溃问题
+- 修复 AI 生成图像无效问题
+- 修复下载器与播放器协同处理问题
 
 ### v1.8.5
-**New Features**
-- App Category: Organize apps into custom categories
-- Website Favicon Fetch: Automatically fetch website icons as app icons
-- Random App Name: Generate random app names with one click
-- Multi App Icons: Support multiple icon options per app
+**新功能**
+- 新增应用分类功能
+- 新增网页应用图标获取功能
+- 新增随机应用名称功能
+- 新增多应用图标功能
 
-**Improvements**
-- Optimized data backup functionality
-- Optimized BlackTech feature
+**优化改进**
+- 优化数据备份功能
+- 优化黑科技功能
 
-**Bug Fixes**
-- Fixed element blocker issues
-- Fixed background run feature crash
-- Fixed multi-language string adaptation issues
+**Bug 修复**
+- 修复元素屏蔽器问题
+- 修复后台运行功能闪退问题
+- 修复多语言字符串适配问题
 
 ### v1.8.0
-**New Features**
-- Multi-language Support: Chinese, English, and Arabic languages
-- Share APK Feature: Share built APK files
-- Element Blocker Extension Module: Visually block webpage elements
-- Forced Run Mode: Support app forced run mode
-- Linux One-Click Build: Support one-click frontend project build in Linux environment
-- Vue/React/Vite to APK: Convert frontend framework projects to APK
+**新功能**
+- 多语言支持：适配中文、英文、阿拉伯语三种语言
+- 分享 APK 功能：支持分享已构建的 APK 文件
+- 元素屏蔽器扩展模块：可视化屏蔽网页元素
+- 强制运行功能：支持应用强制运行模式
+- Linux 一键构建配置：支持在 Linux 环境下一键构建前端项目
+- Vue/React/Vite 转 APK：支持前端框架项目转换为 APK
 
-**Improvements**
-- Optimized theme functionality
-- Optimized About page UI
+**优化改进**
+- 优化主题功能
+- 优化关于页面 UI
 
-**Bug Fixes**
-- Fixed status bar issue in fullscreen mode
-- Fixed crash issue on some devices/emulators
+**Bug 修复**
+- 修复全屏模式中状态栏问题
+- 修复部分机型/模拟器闪退问题
 
 ### v1.7.7
-**New Features**
-- Status bar style configuration: Custom height, background color/image, transparency
-- APK encryption protection: Encrypt configuration files and resources
+**新功能**
+- 状态栏样式配置：支持自定义状态栏高度、背景颜色/图片、透明度
+- APK 加密保护：支持对配置文件和资源进行加密保护
 
 ### v1.7.6
-**New Features & Improvements**
-- Boot auto-start and scheduled auto-start functionality
-- Data backup: One-click export/import all app data
-- Transparent status bar overlay in fullscreen mode
+**新功能与优化**
+- 开机自启动和定时自启动功能
+- 数据备份：一键导出/导入所有应用数据
+- 全屏模式状态栏透明叠加显示
 
 ### v1.7.5
-**New Features & Improvements**
-- Show status bar option in fullscreen mode: Solves the navigation bar issue when not using fullscreen mode
-- Fixed long-press text cannot be copied in HTML projects
-- Support Android 6.0 (API 23)
+**新功能与优化**
+- 全屏模式下可选择显示状态栏：解决不开全屏模式会出现导航栏的问题
+- 修复 HTML 项目长按文字无法复制的问题
+- 支持 Android 6.0 系统（API 23）
 
 ### v1.7.4
-**Bug Fixes**
-- Fixed HTML app not showing status bar issue
-- Fixed some system apps showing empty names
-- Fixed code block content overlay issue in AI Module Developer
-- Fixed tool calling failure in AI HTML Coding
-- Optimized AI HTML Coding prompts and model compatibility
+**Bug 修复**
+- 修复 HTML 应用不显示状态栏的问题
+- 修复部分系统应用名称显示为空的问题
+- 修复 AI 模块开发中代码块显示内容叠加的问题
+- 修复 AI HTML 编程中工具调用失败的问题
+- 优化 AI HTML 编程的提示词和模型兼容性
 
 ### v1.7.3
-**New Features & Improvements**
-- Status bar color follows theme: Defaults to theme color, light background for light theme, dark background for dark theme
-- Support custom status bar background color: Choose transparent, follow theme, or custom color
-- Fixed status bar text visibility issue
+**新功能与优化**
+- 状态栏颜色跟随主题：默认跟随主题色彩，浅色主题用浅色背景，深色主题用深色背景
+- 支持自定义状态栏背景颜色：可选择透明、跟随主题或自定义颜色
+- 修复状态栏文字看不清的问题
 
 ### v1.7.2
-**Bug Fixes**
-- Fixed JS file picker compatibility issue on some systems
-- Fixed video fullscreen not auto-rotating to landscape, now auto-rotates and fills screen
+**Bug 修复**
+- 修复 JS 文件选择器在部分系统上无法选择的兼容性问题
+- 修复视频全屏时未自动横屏的问题，现在会自动旋转并填充显示
 
 ### v1.7.1
-**Bug Fixes & New Features**
-- Fixed long-press image save not working on Xiaohongshu and similar sites
-- Added Xiaohongshu image downloader module with batch download support
-- Fixed Blob format file (e.g., JSON) export failure
-- Fixed CSS/JS not working after HTML project import
-- Fixed duplicate app name display in recent tasks list
+**Bug 修复与新功能**
+- 修复小红书等网站图片长按无法保存的问题
+- 新增小红书图片下载器模块，支持批量下载
+- 修复 Blob 格式文件（如 JSON）导出失败的问题
+- 修复 HTML 项目导入后 CSS/JS 不生效的问题
+- 修复任务列表显示双重名称的问题
 
 ### v1.7.0
-**Bug Fixes & Improvements**
-- Fixed dozens of known issues
-- Optimized AI Agent programming architecture
-- Immersive fullscreen mode for exported APKs
-  - Status bar and navigation bar fully transparent
-  - Content fills the entire screen
-  - Support for notch/punch-hole displays
-  - Auto-hide virtual buttons during video playback
-- Extended app name length support (up to ~60 Chinese characters)
+**Bug 修复与优化**
+- 修复数十个已知问题
+- 优化 AI Agent 编程架构
 
 ### v1.6.0
-**New Features**
-- Extension Module System: Tampermonkey-like JS/CSS injection system
-  - 9 feature-rich built-in modules (video download, platform video extractors, video enhancer, web analyzer, dark mode, privacy protection, content enhancer)
-  - 30+ code templates for quick module creation
-  - 20+ module categories covering common needs
-  - URL match rules support (wildcards/regex)
-  - User-configurable settings
-  - Share code import/export
-- AI Module Development Agent: AI-assisted extension module development
-  - Natural language requirement description, auto code generation
-  - Automatic syntax check and security scan
-  - Auto-fix detected errors
-  - Code snippet library for quick insertion
-- AI Icon Generator: Generate app icons using AI
-- Icon Library: Collect and manage generated icons
-- Online Music Search: Search and download music online for BGM
-- Announcement Template System: 10 beautiful popup templates
-- Auto Web Translation: Automatic webpage content translation
+**新增功能**
+- 扩展模块系统：类油猴脚本的 JS/CSS 注入系统
+  - 9个功能丰富的内置模块（视频下载、平台视频提取、视频增强、网页分析、暗黑模式、隐私保护、内容增强）
+  - 30+ 代码模板，快速创建模块
+  - 20+ 模块分类，覆盖常见需求
+  - 支持 URL 匹配规则（通配符/正则）
+  - 支持用户配置项
+  - 支持分享码导入导出
+- AI 模块开发 Agent：AI 辅助开发扩展模块
+  - 自然语言描述需求，自动生成代码
+  - 自动语法检查和安全扫描
+  - 自动修复检测到的错误
+  - 代码片段库快速插入
+- AI 图标生成：使用 AI 生成应用图标
+- 图标库：收藏和管理生成的图标
+- 在线音乐搜索：在线搜索下载音乐作为 BGM
+- 公告模板系统：10 种精美公告弹窗模板
+- 网页自动翻译：网页内容自动翻译功能
 
-**Improvements**
-- Refactored extension module architecture for more flexible development
-- Optimized AI features, support more models and providers
+**优化改进**
+- 重构扩展模块架构，支持更灵活的模块开发
+- 优化 AI 功能，支持更多模型和供应商
 
 ### v1.5.0
-**New Features**
-- AI HTML Coding Assistant: AI-powered code generation
-  - Multiple text/image generation models
-  - Session management, templates, styles
-  - Code block parsing, live preview
-- AI Settings: Unified API key and model management
-  - Multiple API keys, real-time connection testing
-  - Custom Base URL, model list fetched from API
-- HTML App: Convert HTML/CSS/JS projects into standalone Android apps
-- Theme System: Brand new theme customization
-  - Multiple beautiful theme styles, dark mode support
-  - Customizable animation effects and speed
-- Background Music (BGM): Add BGM with LRC lyrics sync
+**新增功能**
+- AI HTML 编程助手：使用 AI 辅助生成和修改 HTML 代码
+  - 支持多种文本/图像生成模型
+  - 会话管理、模板选择、样式定制
+  - 代码块解析、实时预览
+- AI 设置界面：统一管理 API 密钥和模型
+  - 支持添加多个 API Key，实时测试连接
+  - 支持自定义 Base URL，模型列表从 API 实时获取
+- HTML 应用：支持将 HTML/CSS/JS 项目转换为独立 Android 应用
+- 主题系统：全新的主题定制功能
+  - 内置多款精美主题风格，支持深色模式
+  - 可自定义动画效果开关和速度
+- 背景音乐（BGM）：为应用添加背景音乐
+  - 支持 LRC 歌词同步显示、循环播放
 
-**Improvements**
-- Home UI integration with AI Coding, Theme, AI Settings entries
-- FAB menu adds HTML app creation
+**优化改进**
+- 主页 UI 整合 AI 编程、主题设置、AI 设置入口
+- FAB 菜单新增 HTML 应用创建入口
 
 ### v1.3.0
-**New Features**
-- Media App: Convert images/videos into standalone apps
-- User Scripts: Support custom JavaScript injection
-- Splash Screen: Support image/video with audio toggle, landscape, fill screen
-- Video Trimmer: Visual video segment selection with real-time preview
+**新增功能**
+- 媒体应用：支持图片/视频转换为独立 App
+  - 图片转 App：全屏展示，支持铺满屏幕
+  - 视频转 App：支持循环播放、音频开关、自动播放
+  - 媒体应用支持导出为独立 APK
+- 用户脚本注入：支持自定义 JavaScript 脚本
+  - 支持多个脚本管理（启用/禁用）
+  - 支持页面加载前/后执行时机
+  - 导出 APK 完整支持脚本注入
+- 启动画面（Splash Screen）：支持设置应用启动时显示的图片或视频
+  - 支持图片启动画面，可设置显示时长
+  - 支持视频启动画面，内置视频裁剪器（时长不限）
+  - 视频启动画面支持音频开关
+  - 支持点击跳过、横屏显示、铺满屏幕
+- 视频裁剪组件：可视化选择视频片段，实时预览
 
-**Improvements**
-- Data model refactoring for video trimming configuration persistence
-- Shell mode (APK export) fully supports splash screen playback
-- Optimized MediaPlayer for precise seek and auto-stop
+**优化改进**
+- 数据模型重构，支持视频裁剪配置持久化
+- Shell 模式（导出 APK）完整支持启动画面播放
+- 优化 MediaPlayer 视频播放，支持精确 seek 和自动停止
+- 主页 FAB 改为展开菜单，支持创建网页应用和媒体应用
 
-**Bug Fixes**
-- Fixed shortcut icon incorrectly using splash image
-- Fixed database schema mismatch causing crashes
+**Bug 修复**
+- 修复快捷方式图标错误使用启动图片的问题
+- 修复数据库 schema 不匹配导致的闪退问题
 
-### v1.2.x
-- APK icon cropping fix (Android Adaptive Icon compliance)
-- Release build custom icon fix
-- Fullscreen mode support
+### v1.2.3
+**Bug 修复**
+- 修复构建 APK 图标被放大裁剪的问题
+- 遵循 Android Adaptive Icon 规范处理图标
+- 提升图标清晰度（使用 xxxhdpi 432px 分辨率）
+
+### v1.2.2
+**Bug 修复**
+- 修复 Release 版本构建 APK 时自定义图标不生效的问题
+- 优化 ArscEditor 图标路径替换
+
+### v1.2.1
+**新增功能**
+- 全屏模式：隐藏工具栏，无浏览器特征
+
+### v1.2.0
+**Bug 修复**
+- 修复导出APK包名非法导致安装失败
+- 修复导出APK权限/Provider冲突问题
 
 ### v1.1.0
-- One-click APK building
-- App modifier with clone install
-- Desktop mode for web pages
-- Material Design 3 UI
+**新增功能**
+- 一键构建独立 APK 安装包
+- 应用修改器：修改已安装应用的图标和名称
+- 克隆安装：生成独立包名的克隆应用
+- 访问电脑版：强制桌面模式加载网页
 
 ### v1.0.0
-- Initial release
-- URL to shortcut
-- Activation codes, announcements, ad blocking
-- Project template export
+- 初始版本发布
+- 支持 URL 转快捷方式基本功能
+- 支持激活码、公告、广告拦截
+- 支持项目模板导出
 
-## 📬 Contact
+## 联系作者
 
-Developed independently by shiaho. Feel free to reach out!
+本应用由作者（shiaho）独立开发，有任何问题都可以找我！
 
-### 📱 Social Media
+### 📱 社交媒体
 
-| Platform | Account | Link |
-|----------|---------|------|
+| 平台 | 账号 | 链接 |
+|------|------|------|
 | **X (Twitter)** | @shiaho777 | [x.com/@shiaho777](https://x.com/@shiaho777) |
 | **Telegram** | webtoapp777 | [t.me/webtoapp777](https://t.me/webtoapp777) |
 | **GitHub** | shiahonb777 | [github.com/shiahonb777/web-to-app](https://github.com/shiahonb777/web-to-app) |
-| **Bilibili** | Video Tutorials | [b23.tv/8mGDo2N](https://b23.tv/8mGDo2N) |
+| **Bilibili** | 视频教程 | [b23.tv/8mGDo2N](https://b23.tv/8mGDo2N) |
 
-### 💬 Community Groups
+### 💬 交流群
 
-| Platform | Group ID/Link | Description |
-|----------|---------------|-------------|
-| **QQ Group** | 1041130206 | Daily interaction, updates & latest releases |
-| **Telegram Group** | [t.me/webtoapp777](https://t.me/webtoapp777) | International user community |
+| 平台 | 群号/链接 | 说明 |
+|------|----------|------|
+| **QQ群** | 1041130206 | 作者每天互动，发布更新消息和最新安装包 |
+| **Telegram群** | [t.me/webtoapp777](https://t.me/webtoapp777) | 国际用户交流群 |
 
-### 📧 Contact Info
+### 📧 联系方式
 
-| Method | Account |
-|--------|---------|
-| **Author QQ** | 2711674184 |
-| **QQ Email** | 2711674184@qq.com |
+| 方式 | 账号 |
+|------|------|
+| **作者QQ** | 2711674184 |
+| **QQ邮箱** | 2711674184@qq.com |
 | **Gmail** | weuwo479@gmail.com |
 
 ---
 
-## ⚠️ Legal Disclaimer
+## ⚠️ 法律声明与免责条款
 
-> **Important Notice**: By using this software, you acknowledge that you have read, understood, and agreed to all the following terms.
+> **重要提示**：使用本软件即表示您已阅读、理解并同意以下全部条款。
 
-### 1. Software Nature and Purpose
+### 一、软件性质与用途
 
-This software is an **open-source technical research and educational demonstration tool**. All features are implemented based on Android's public APIs, intended to demonstrate mobile application development technology. This software does not encourage or support any illegal use.
+本软件为**开源技术研究与教育演示工具**，所有功能均基于 Android 系统公开 API 实现，旨在展示移动应用开发技术。本软件不鼓励、不支持任何非法用途。
 
-### 2. User Responsibilities and Obligations
+### 二、用户责任与义务
 
-Users should ensure they use this software in **legal and legitimate** scenarios, including but not limited to:
+用户应确保在**合法、正当**的场景下使用本软件，包括但不限于：
 
-- **Self-Management**: For personal focus training and study time management
-- **Enterprise Display**: For exhibition terminals in trade shows, malls, etc.
-- **Parental Supervision**: Reasonable use with minors' informed consent
-- **Educational Research**: For technical learning and security research
+- **自我管理**：用于个人专注力训练、学习时间管理
+- **企业展示**：用于展会、商场等场景的展示终端
+- **家长监护**：在未成年人知情同意下的合理使用
+- **教育研究**：用于技术学习和安全研究
 
-⛔ **Strictly prohibited** to use this software for any behavior that infringes on others' personal freedom, privacy, property rights, or other legitimate rights and interests.
+⛔ **严禁**将本软件用于任何侵犯他人人身自由、隐私权、财产权等合法权益的行为。
 
-### 3. Special Declaration for Advanced Features
+### 三、高级功能特别声明
 
-The "Forced Run" and related hardware control features (hereinafter referred to as "Advanced Features") contained in this software are of a **technical demonstration nature**:
+本软件包含的「强制运行」及相关硬件控制功能（以下简称「高级功能」）属于**技术演示性质**：
 
-1. **[Informed Consent Principle]** Advanced features should only be enabled when the device owner or user is fully informed and has explicitly consented
-2. **[Autonomous Control Principle]** All features provide emergency exit mechanisms; users can terminate at any time via password
-3. **[Technology Neutrality Principle]** The features themselves are not illegal; their legality depends on the user's specific use method and purpose
-4. **[Risk Assumption Principle]** Enabling advanced features may cause device heating, accelerated battery consumption, etc.; users must assume related risks
+1. **【知情同意原则】** 高级功能仅应在设备所有者或使用者完全知情并明确同意的情况下启用
+2. **【自主控制原则】** 所有功能均提供紧急退出机制，用户可通过密码随时终止
+3. **【技术中立原则】** 功能本身不具有违法性，其合法性取决于使用者的具体使用方式和目的
+4. **【风险自担原则】** 启用高级功能可能造成设备发热、电池消耗加快等情况，用户需自行承担相关风险
 
-### 4. Disclaimer
+### 四、免责条款
 
-1. This software is provided "**AS IS**"; the developer makes no express or implied warranties regarding the software's suitability, reliability, or security
-2. **All legal liabilities** arising from users' use of this software in violation of laws, regulations, or this statement shall be borne by the users themselves and have nothing to do with the developer
-3. The developer shall not be liable for any direct, indirect, incidental, special, or punitive damages caused by the use of this software
-4. Any third party's modification or distribution of this software's source code shall bear its own legal responsibility
+1. 本软件按「**现状**」提供，开发者不对软件的适用性、可靠性、安全性作任何明示或暗示的保证
+2. 用户因违反法律法规或本声明使用本软件所产生的**一切法律责任**，由用户自行承担，与开发者无关
+3. 开发者不对因使用本软件导致的任何直接、间接、偶然、特殊或惩罚性损害承担责任
+4. 任何第三方利用本软件源代码进行的修改、分发行为，其法律责任由该第三方自行承担
 
-### 5. Compliance Guidelines
+### 五、合规使用指引
 
-To ensure legal and compliant use, users are advised to:
+为确保合法合规使用，建议用户：
 
-- ✅ Obtain written or electronic consent from the actual device user before use
-- ✅ Develop corresponding usage specifications and management systems in enterprise scenarios
-- ✅ Ensure compliance with relevant educational regulations in educational scenarios
-- ✅ Regularly check and comply with the latest requirements of local laws and regulations
+- ✅ 在使用前获取设备实际使用者的书面或电子形式同意
+- ✅ 在企业场景下制定相应的使用规范和管理制度
+- ✅ 在教育场景下确保符合相关教育法规要求
+- ✅ 定期检查并遵守当地法律法规的最新要求
 
-### 6. Intellectual Property Statement
+### 六、知识产权声明
 
-This software is released under the **MIT Open Source License**. Users may freely use, modify, and distribute it, but must retain the original copyright notice. Legal responsibilities for secondary development based on this software shall be borne by the secondary developer.
+本软件基于 **MIT 开源协议**发布，用户可自由使用、修改和分发，但需保留原始版权声明。用户基于本软件进行的二次开发，其法律责任由二次开发者自行承担。
 
-### End User Agreement Confirmation
+### 最终用户协议确认
 
-By continuing to use this software, you confirm that:
+继续使用本软件即表示您：
 
-- ✓ You are at least 18 years old or have obtained consent from a legal guardian
-- ✓ You have fully read and understood all the above terms
-- ✓ You agree to comply with all terms of use and local laws and regulations
-- ✓ You voluntarily assume all risks and responsibilities that may arise from using this software
-
----
-
-*This statement takes effect from the date of publication. The developer reserves the right to modify this statement at any time.*
-
-*Last updated: January 2026*
+- ✓ 已年满18周岁或已获得法定监护人同意
+- ✓ 已完整阅读并理解上述所有条款
+- ✓ 同意遵守所有使用条款和当地法律法规
+- ✓ 自愿承担使用本软件可能产生的一切风险和责任
 
 ---
 
-<div align="center">
+*本声明自发布之日起生效，开发者保留随时修改本声明的权利。*
 
-**Open Source · Free Forever · Star ⭐ to Support**
-
-</div>
+*最后更新：2026年1月*
