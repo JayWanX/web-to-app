@@ -10,24 +10,51 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
-// Read signing config from local.properties (not committed to VCS)
+// 安全加载 local.properties，若文件不存在则返回空的 Properties 对象
 val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) {
-        file.inputStream().use { load(it) }
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) {
+        localFile.inputStream().use { load(it) }
     }
 }
 
 android {
-
     signingConfigs {
-        create("shiaho") {
-            storeFile = file(localProperties.getProperty("signing.storeFile", ""))
-            storePassword = localProperties.getProperty("signing.storePassword", "")
-            keyAlias = localProperties.getProperty("signing.keyAlias", "")
-            keyPassword = localProperties.getProperty("signing.keyPassword", "")
+        // 本地开发配置（仅当 local.properties 中存在有效路径且文件存在时才创建）
+        val localStoreFile = localProperties.getProperty("signing.storeFile")
+        if (!localStoreFile.isNullOrBlank()) {
+            val storeFileObj = file(localStoreFile)
+            if (storeFileObj.exists()) {
+                create("shiaho") {
+                    storeFile = storeFileObj
+                    storePassword = localProperties.getProperty("signing.storePassword") ?: ""
+                    keyAlias = localProperties.getProperty("signing.keyAlias") ?: ""
+                    keyPassword = localProperties.getProperty("signing.keyPassword") ?: ""
+                }
+            } else {
+                println("⚠️ 警告：本地签名文件不存在，跳过 shiaho 配置：${storeFileObj.absolutePath}")
+            }
+        }
+    
+        // CI/CD 发布配置（强制要求 STORE_FILE_PATH 不为空）
+        create("release") {
+            val storeFilePath = (project.findProperty("STORE_FILE_PATH") as? String)
+                ?.takeIf { it.isNotBlank() }
+                ?: error("❌ STORE_FILE_PATH 未设置或为空，请在命令行通过 -PSTORE_FILE_PATH 指定有效路径")
+    
+            // 使用局部变量避免智能转换问题
+            val f = file(storeFilePath)
+            if (!f.exists()) {
+                error("❌ 签名文件不存在：${f.absolutePath}")
+            }
+    
+            storeFile = f
+            storePassword = project.findProperty("STORE_PASSWORD") as? String ?: ""
+            keyAlias = project.findProperty("KEY_ALIAS") as? String ?: ""
+            keyPassword = project.findProperty("KEY_PASSWORD") as? String ?: ""
         }
     }
+    
     namespace = "com.webtoapp"
     compileSdk = 36
 
@@ -66,12 +93,9 @@ android {
 
     buildTypes {
         release {
-            // 启用 R8 tree-shaking（移除未使用代码）+ 资源压缩
-            // ProGuard 规则中已设置 -dontobfuscate，确保类名不被混淆
-            // （WebToApp 使用自身 APK 作为模板，类名必须保持不变）
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("shiaho")
+            signingConfig = signingConfigs.getByName("release") 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -79,20 +103,18 @@ android {
         }
     }
     
-    // 禁用 ABI splits，生成单一完整 APK
-    // 这对于 WebToApp 是必要的，因为应用需要使用自身 APK 作为模板
+    // 禁用 ABI splits
     splits {
         abi {
             isEnable = false
         }
     }
     
-    // 允许以 "." 开头的 assets 目录被打包（如 .pypackages）
-    // 默认 aapt 会忽略 dot-prefixed 文件，但预打包的 Python 依赖需要它
-    aaptOptions {
+    androidResources {
+        // 允许打包以 "." 开头的 assets 文件（如 .pypackages）
         ignoreAssetsPattern = ""
     }
-
+    
     bundle {
         language {
             enableSplit = false
@@ -126,10 +148,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-        // 确保 native 库不被压缩，否则安装会失败
+        // 确保 native 库不被压缩
         jniLibs {
             useLegacyPackaging = true
-            // 排除 GeckoView 原生库 — 这些 .so 文件由用户按需下载，不内置到主 APK
+            // 排除 GeckoView 原生库
             excludes += "**/libxul.so"
             excludes += "**/libmozglue.so"
             excludes += "**/libgeckoffi.so"
@@ -261,10 +283,16 @@ tasks.register("downloadPhpBinary") {
         val tarFile = File(tempDir, "php.tar.gz")
         
         println("Downloading PHP $phpVersion for Android arm64...")
-        project.exec { commandLine("curl", "-L", "-f", "-o", tarFile.absolutePath, url) }
+        
+        exec { 
+            commandLine("curl", "-L", "-f", "-o", tarFile.absolutePath, url) 
+        }
         
         println("Extracting PHP binary...")
-        project.exec { commandLine("tar", "-xzf", tarFile.absolutePath, "-C", tempDir.absolutePath) }
+        
+        exec { 
+            commandLine("tar", "-xzf", tarFile.absolutePath, "-C", tempDir.absolutePath) 
+        }
         
         // pmmp tar.gz structure: bin/php or just php
         val extracted = File(tempDir, "bin/php").takeIf { it.exists() }
