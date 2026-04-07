@@ -1,0 +1,78 @@
+name: Build Android App
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Choose build type'
+        required: true
+        type: choice
+        options:
+          - debug
+          - release
+        default: 'release'
+
+jobs:
+  build:
+    name: Build App
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检查代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 设置 JDK 环境
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
+      # 3. 授予权限
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. 解码并生成密钥库文件（仅 Release 构建需要）
+      - name: Decode Keystore
+        if: ${{ github.event.inputs.build_type == 'release' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          TARGET_KEYSTORE_PATH: ${{ github.workspace }}/app/JayWan.jks
+        run: |
+          echo "🔑 Decoding keystore to: $TARGET_KEYSTORE_PATH"
+          mkdir -p "$(dirname "$TARGET_KEYSTORE_PATH")"
+          echo "$KEYSTORE_BASE64" | base64 -w 0 --decode > "$TARGET_KEYSTORE_PATH"
+          
+          if [ -f "$TARGET_KEYSTORE_PATH" ]; then
+            echo "✅ Keystore successfully created."
+            ls -lh "$TARGET_KEYSTORE_PATH"
+          else
+            echo "❌ Failed to create keystore!"
+            exit 1
+          fi
+
+      # 5. 构建 APK（根据选择执行 Debug 或 Release）
+      - name: Build APK
+        run: |
+          if [ "${{ github.event.inputs.build_type }}" = "release" ]; then
+            echo "🚀 Building Release APK..."
+            ./gradlew assembleRelease \
+              -PSTORE_FILE_PATH="${{ github.workspace }}/app/JayWan.jks" \
+              -PSTORE_PASSWORD="${{ secrets.STORE_PASSWORD }}" \
+              -PKEY_ALIAS="${{ secrets.KEY_ALIAS }}" \
+              -PKEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
+          else
+            echo "🚀 Building Debug APK..."
+            ./gradlew assembleDebug
+          fi
+
+      # 6. 保存构建产物
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ github.event.inputs.build_type }}-artifacts
+          path: |
+            app/build/outputs/apk/${{ github.event.inputs.build_type }}/*.apk
+          retention-days: 7
